@@ -1,2 +1,61 @@
 /* dragon-minimal —  Apple-style Theme */
-/* 主要样式已通过 Tailwind + 内联 <style> 覆盖，此文件用于 Hexo 中的自定义补充样式 */
+/* 补充样式 — 表格、文章排版等 */
+
+/* ── 文章正文排版 ── */
+.article-content {
+  font-size: 17px;
+  line-height: 1.85;
+  color: #1d1d1f;
+}
+
+/* ── 表格样式 ── */
+.article-content table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 2rem 0;
+  font-size: 14px;
+  line-height: 1.6;
+}
+.article-content thead {
+  border-bottom: 2px solid #1d1d1f;
+}
+.article-content th {
+  text-align: left;
+  padding: 12px 16px;
+  font-weight: 600;
+  font-size: 13px;
+  color: #1d1d1f;
+  background: #f5f5f7;
+  white-space: nowrap;
+}
+.article-content td {
+  padding: 12px 16px;
+  border-bottom: 1px solid #e8e8ed;
+  vertical-align: top;
+  color: #1d1d1f;
+}
+.article-content tbody tr:hover {
+  background: #fbfbfd;
+}
+.article-content tbody tr:last-child td {
+  border-bottom: 2px solid #1d1d1f;
+}
+
+/* ── 表格移动端横向滚动容器 ── */
+.article-content .table-wrapper {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  margin: 2rem 0;
+  border-radius: 12px;
+  border: 1px solid #e8e8ed;
+}
+.article-content .table-wrapper table {
+  margin: 0;
+  min-width: 600px;
+}
+.article-content .table-wrapper thead th {
+  background: transparent;
+}
+.article-content .table-wrapper tbody tr:last-child td {
+  border-bottom: none;
+}
