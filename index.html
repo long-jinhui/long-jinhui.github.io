@@ -1,1442 +1,1357 @@
 <!DOCTYPE html>
-<html>
-  
-
-
+<html lang="zh-CN">
 
 <head>
-  <meta http-equiv="content-type" content="text/html; charset=utf-8">
-  <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
-  <!-- Global site tag (gtag.js) - Google Analytics -->
-
-
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Dragon</title>
-  
-    
-<link rel="stylesheet" href="/js/aos/aos.css">
-
-  
-  <link rel="icon" type="image/x-icon, image/vnd.microsoft.icon" href="/favicon.ico">
-  <link rel="stylesheet" href="https://at.alicdn.com/t/font_1911880_c1nvbyezg17.css">
-  <link href="https://cdn.bootcdn.net/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
-  
-    <script>
-        var themeModelId = '';
-        if (themeModelId) {
-            localStorage.setItem('modelId', themeModelId);
-        }
-    </script>
-    
-    <script src="https://cdn.jsdelivr.net/gh/yuang01/live2d-widget@latest/autoload.js"></script>
-  
-  
-<link rel="stylesheet" href="/css/animate.min.css">
-
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet">
   
 <link rel="stylesheet" href="/css/style.css">
 
-  
-  
-    
-<link rel="stylesheet" href="/js/fancybox/jquery.fancybox.min.css">
-
-  
-  
-    
-<link rel="stylesheet" href="/js/shareJs/share.min.css">
-
-  
   <style>
-        @media (max-width: 992px) {
-            #waifu {
-                display: none;
-            }
-        }
-    </style>
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background-color: #fbfbfd;
+      color: #1d1d1f;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+    ::-webkit-scrollbar { width: 12px; }
+    ::-webkit-scrollbar-track { background: #fbfbfd; }
+    ::-webkit-scrollbar-thumb { background-color: #d2d2d7; border-radius: 20px; border: 3px solid #fbfbfd; }
+
+    .reveal {
+      opacity: 0;
+      transform: translateY(40px);
+      transition: all 1.2s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .reveal.active { opacity: 1; transform: translateY(0); }
+
+    .apple-card {
+      background-color: #ffffff;
+      border-radius: 28px;
+      box-shadow: 0 4px 24px rgba(0,0,0,0.04);
+      transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.4s ease;
+    }
+    .apple-card:hover {
+      transform: scale(1.02);
+      box-shadow: 0 12px 32px rgba(0,0,0,0.08);
+    }
+
+    .btn-primary {
+      background-color: #1d1d1f;
+      color: white;
+      border-radius: 999px;
+      padding: 12px 24px;
+      font-size: 15px;
+      font-weight: 500;
+      transition: opacity 0.2s ease, transform 0.2s ease;
+    }
+    .btn-primary:hover { opacity: 0.8; transform: scale(1.05); }
+
+    .filter-btn {
+      color: #86868b;
+      font-size: 14px;
+      font-weight: 500;
+      padding: 6px 16px;
+      border-radius: 999px;
+      transition: all 0.3s ease;
+      cursor: pointer;
+    }
+    .filter-btn.active { color: #1d1d1f; background-color: #e8e8ed; }
+
+    .chart-container {
+      position: relative;
+      width: 100%;
+      max-width: 500px;
+      margin-left: auto;
+      margin-right: auto;
+      height: 300px;
+      max-height: 400px;
+    }
+
+    .article-content {
+      font-size: 17px;
+      line-height: 1.85;
+      color: #1d1d1f;
+    }
+    .article-content h2 {
+      font-size: 1.75rem;
+      font-weight: 700;
+      margin: 3rem 0 1rem;
+      letter-spacing: -0.02em;
+    }
+    .article-content h3 {
+      font-size: 1.3rem;
+      font-weight: 600;
+      margin: 2rem 0 0.75rem;
+    }
+    .article-content p { margin-bottom: 1.6rem; }
+    .article-content strong { font-weight: 600; }
+    .article-content a {
+      color: #0066cc;
+      text-decoration: none;
+      border-bottom: 1px solid rgba(0,102,204,0.3);
+      transition: border-color 0.2s;
+    }
+    .article-content a:hover { border-color: #0066cc; }
+    .article-content :not(pre) > code {
+      background: #f5f5f7;
+      color: #1d1d1f;
+      padding: 3px 8px;
+      border-radius: 6px;
+      font-size: 0.88em;
+      font-family: "SF Mono", "Fira Code", "Cascadia Code", Consolas, monospace;
+    }
+    .article-content pre {
+      background: #1d1d1f;
+      color: #f5f5f7;
+      padding: 1.5rem 1.75rem;
+      border-radius: 16px;
+      overflow-x: auto;
+      margin: 2rem 0;
+      font-size: 14px;
+      line-height: 1.7;
+      font-family: "SF Mono", "Fira Code", "Cascadia Code", Consolas, monospace;
+    }
+    .article-content pre code { background: transparent; padding: 0; font-size: inherit; color: inherit; }
+    .article-content blockquote {
+      border-left: 4px solid #d2d2d7;
+      padding: 0.5rem 0 0.5rem 1.5rem;
+      color: #86868b;
+      font-style: italic;
+      margin: 2rem 0;
+    }
+    .article-content ul, .article-content ol { margin: 1.2rem 0; padding-left: 1.5rem; }
+    .article-content li { margin-bottom: 0.5rem; }
+    .article-content ul li::marker { color: #86868b; }
+    .article-content img { max-width: 100%; border-radius: 16px; margin: 2rem 0; }
+    .article-content hr { border: none; border-top: 1px solid #e8e8ed; margin: 3rem 0; }
+
+    .author-avatar {
+      width: 32px; height: 32px; border-radius: 50%;
+      background: linear-gradient(135deg, #1d1d1f, #86868b);
+      color: #fff; font-weight: 700; font-size: 14px;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .page-cover {
+      width: 100%; height: 35vh; overflow: hidden;
+      background-size: cover; background-position: center center;
+    }
+
+    /* 首页卡片三种尺寸 */
+    .card-lg  { min-height: 500px; }
+    .card-md  { min-height: 380px; }
+    .card-sm  { min-height: 260px; }
+    #article-grid { grid-auto-flow: dense; }
+    @media (min-width: 768px) {
+      .card-lg { grid-column: span 2; }
+    }
+  </style>
 <meta name="generator" content="Hexo 5.2.0"></head>
 
-  
-<script src="/js/jquery3.5.1.js"></script>
+<body class="relative">
 
-  
-<script src="/js/vue2.6.11.js"></script>
-
-  <body>
-    <header class="header bg-color" 
-  style="position: fixed; 
-  left: 0; top: 0; z-index: 10;width: 100%;"
->
-  <div class="header-content">
-    <div class="bars">
-      <div id="appDrawer" class="sidebar-image">
-  <i class="fa fa-bars" aria-hidden="true" @click="showDialogDrawer"></i>
-  <transition name="fade">
-    <div class="drawer-box_mask" v-cloak style="display: none;" v-show="visible" @click.self="cancelDialogDrawer">
-    </div>
-  </transition>
-  <div class="drawer-box" :class="{'active': visible}">
-    <div class="drawer-box-head bg-color">
-      <img class="drawer-box-head_logo" src="/medias/logo.png" alt="logo">
-      <h3 class="drawer-box-head_title">Dragon</h3>
-      <h5 class="drawer-box-head_desc"></h5>
-    </div>
-    <div class="drawer-box-content">
-      <ul class="drawer-box-content_menu">
-        
-          <li class="drawer-box-content_item">
-            <a href="/" class="menu-item-link">
-              
-                <i class="fa fa-home" aria-hidden="true"></i>
-              
-              <span>首页</span>
-            </a>
-          </li>
-        
-          <li class="drawer-box-content_item">
-            <a href="/archives" class="menu-item-link">
-              
-                <i class="fa fa-home" aria-hidden="true"></i>
-              
-              <span>归档</span>
-            </a>
-          </li>
-        
-          <li class="drawer-box-content_item">
-            <a href="/tags" class="menu-item-link">
-              
-                <i class="fa fa-tags" aria-hidden="true"></i>
-              
-              <span>标签</span>
-            </a>
-          </li>
-        
-          <li class="drawer-box-content_item">
-            <a href="/categories" class="menu-item-link">
-              
-                <i class="fa fa-bookmark" aria-hidden="true"></i>
-              
-              <span>分类</span>
-            </a>
-          </li>
-        
-          <li class="drawer-box-content_item">
-            <a href="/about" class="menu-item-link">
-              
-                <i class="fa fa-user" aria-hidden="true"></i>
-              
-              <span>关于</span>
-            </a>
-          </li>
-        
-          <li class="drawer-box-content_item">
-            <a href="/friends" class="menu-item-link">
-              
-                <i class="fa fa-link" aria-hidden="true"></i>
-              
-              <span>友情链接</span>
-            </a>
-          </li>
-        
-        <li class="drawer-box-content_item">
-          <a target="_blank" rel="noopener" href="https://github.com/yuang01/hexo-theme-bamboo">
-            <i class="fa fa-github" aria-hidden="true"></i>
-            <span>Github</span>
-          </a>
-        </li>
-      </ul>
-    </div>
-  </div>
-</div>
-
-<script>
-  var body = document.body || document.documentElement || window;
-  var vm = new Vue({
-    el: '#appDrawer',
-    data: {
-      visible: false,
-      top: 0,
-    },
-    computed: {
-    },
-    mounted() {
-    },
-    methods: {
-      showDialogDrawer() {
-        this.visible = true;
-        // 防止页面滚动，只能让弹框滚动
-        this.top = $(document).scrollTop()
-        body.style.cssText = 'width: 100%; height: 100%; position: fixed; top: -' + this.top  + 'px; left: 0; overflow: hidden;';
-      },
-      cancelDialogDrawer() {
-        this.visible = false;
-        body.removeAttribute('style');
-        $(document).scrollTop(this.top)
-      }
-    },
-    created() {}
-  })
-</script>
-    </div>
-    <div class="blog-title" id="author-avatar">
-      <div class="avatar">
-        <img src="/medias/logo.png" alt="logo">
-      </div>
-      <a href="/" class="logo">Dragon</a>
-    </div>
-    <nav class="navbar">
-      <ul class="menu">
-        
-          <li class="menu-item">
-            <a href="/" class="menu-item-link">
-              
-                <i class="fa fa-home" aria-hidden="true"></i>
-              
-              <span>首页</span>
-            </a>
-          </li>
-        
-          <li class="menu-item">
-            <a href="/archives" class="menu-item-link">
-              
-                <i class="fa fa-archive" aria-hidden="true"></i>
-              
-              <span>归档</span>
-            </a>
-          </li>
-        
-          <li class="menu-item">
-            <a href="/tags" class="menu-item-link">
-              
-                <i class="fa fa-tags" aria-hidden="true"></i>
-              
-              <span>标签</span>
-            </a>
-          </li>
-        
-          <li class="menu-item">
-            <a href="/categories" class="menu-item-link">
-              
-                <i class="fa fa-bookmark" aria-hidden="true"></i>
-              
-              <span>分类</span>
-            </a>
-          </li>
-        
-          <li class="menu-item">
-            <a href="/about" class="menu-item-link">
-              
-                <i class="fa fa-user" aria-hidden="true"></i>
-              
-              <span>关于</span>
-            </a>
-          </li>
-        
-          <li class="menu-item">
-            <a href="/friends" class="menu-item-link">
-              
-                <i class="fa fa-link" aria-hidden="true"></i>
-              
-              <span>友情链接</span>
-            </a>
-          </li>
-        
-      </ul>
+  <nav class="fixed top-0 w-full z-50 bg-white/70 backdrop-blur-lg border-b border-[#e8e8ed]/50 transition-all duration-300">
+  <div class="max-w-5xl mx-auto px-6 h-14 flex items-center justify-between text-xs tracking-wide font-medium text-[#1d1d1f]/80">
+    <a href="/" class="font-semibold text-lg hover:text-black transition-colors">&#63743; Node</a>
+    <div class="hidden md:flex space-x-10">
       
-        <div id="appSearch">
-  <div class="search"  @click="showDialog()"><i class="fa fa-search" aria-hidden="true"></i></div>
-  <transition name="fade">
-    <div class="message-box_wrapper" style="display: none;" v-cloak v-show="dialogVisible" @click.self="cancelDialogVisible()">
-      <div class="message-box animated bounceInDown">
-        <h2>
-          <i class="fa fa-search" aria-hidden="true"></i>
-          <span class="title">搜索</span>
-          <!-- <i class="fa fa-close" style="float:right;" aria-hidden="true" @click.self="cancelDialogVisible()"></i> -->
-        </h2>
-        <form class="site-search-form">
-          <input type="text"
-            placeholder="请输入关键字"
-            id="local-search-input" 
-            @click="getSearchFile()"
-            class="st-search-input"
-            v-model="searchInput"
-          />
-        </form>
-        <div class="result-wrapper">
-          <div id="local-search-result" class="local-search-result-cls"></div>
-        </div>
-      </div>
-    </div>
-  </transition>
-</div>
-
-<script src="/js/local_search.js"></script>
-
-<script>
-  var body = document.body || document.documentElement || window;
-  var vm = new Vue({
-    el: '#appSearch',
-    data: {
-      dialogVisible: false,
-      searchInput: '',
-      top: 0,
-    },
-    computed: {
-    },
-    mounted() {
-    },
-    methods: {
-      showDialog() {
-        this.dialogVisible = true;
-        // 防止页面滚动，只能让弹框滚动
-        this.top = $(document).scrollTop()
-        body.style.cssText = 'width: 100%; height: 100%; position: fixed; top: -' + this.top  + 'px; left: 0; overflow: hidden;';
-      },
-      getSearchFile() {
-        if (!this.searchInput) {
-          getSearchFile();
-        }
-      },
-      cancelDialogVisible() {
-        this.dialogVisible = false;
-        body.removeAttribute('style');
-        $(document).scrollTop(this.top)
-      },
-    },
-    created() {}
-  })
-</script>
-<!-- 解决刷新页面闪烁问题，可以在元素上添加display: none, 或者用vue.extend方法，详情：https://blog.csdn.net/qq_31393401/article/details/81017912 -->
-<!-- 下面是搜索基本写法 -->
-<!-- <script type="text/javascript" id="local.search.active">
-  var inputArea = document.querySelector("#local-search-input");
-  inputArea.onclick   = function(){ getSearchFile(); this.onclick = null }
-  inputArea.onkeydown = function(){ if(event.keyCode == 13) return false }
-</script> -->
-
+        <a href="/" class="hover:text-black transition-colors">概览</a>
       
-    </nav>
+        <a href="/archives" class="hover:text-black transition-colors">文章</a>
+      
+        <a href="/categories" class="hover:text-black transition-colors">分类</a>
+      
+    </div>
+    
+      <a href="/about" class="flex flex-col items-center gap-0.5 flex-shrink-0 group">
+        <img src="/images/avatar.png" class="w-7 h-7 rounded-full object-cover ring-2 ring-transparent group-hover:ring-[#d2d2d7] transition-all" alt="avatar">
+        <span class="text-[10px] text-[#86868b] group-hover:text-[#1d1d1f] transition-colors leading-none">Dragon</span>
+      </a>
+    
   </div>
-  
-  <a target="_blank" rel="noopener" href="https://github.com/yuang01/hexo-theme-bamboo" class="github-corner color-primary" aria-label="View source on GitHub"><svg width="60" height="60" viewBox="0 0 250 250" style="fill:#fff; position: absolute; top: 0; border: 0; right: 0;" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a><style>.github-corner:hover .octo-arm{animation:octocat-wave 560ms ease-in-out}@keyframes octocat-wave{0%,100%{transform:rotate(0)}20%,60%{transform:rotate(-25deg)}40%,80%{transform:rotate(10deg)}}@media (max-width:500px){.github-corner:hover .octo-arm{animation:none}.github-corner .octo-arm{animation:octocat-wave 560ms ease-in-out}}</style>
+</nav>
+
+
+  <main style="margin-top: 56px;">
+    <!-- Hero -->
+<header id="hero" class="pt-32 md:pt-48 pb-32 px-6 text-center reveal">
+  <h2 class="text-[#86868b] font-semibold tracking-widest text-xs uppercase mb-4">全新个人主页 · Pro</h2>
+  <h1 class="text-6xl md:text-8xl font-bold tracking-tighter text-[#1d1d1f] mb-6 leading-tight">
+    写你所想。<br>尽显锋芒。
+  </h1>
+  <p class="text-xl md:text-2xl text-[#86868b] font-medium max-w-2xl mx-auto mb-12 leading-relaxed">
+    强悍的技术内核，极简的视觉表达。在这里记录代码、架构思考与数字生活。
+  </p>
+  <div class="flex flex-col sm:flex-row justify-center items-center gap-6">
+    <a href="#articles" class="btn-primary">开始阅读</a>
+    <a href="#stats" class="text-[#0066cc] font-medium text-[17px] flex items-center hover:underline group">
+      查看数据报告 <span class="ml-1 text-xl group-hover:translate-x-1 transition-transform">&#8250;</span>
+    </a>
+  </div>
 </header>
-    <main class="main" style="margin-top: 60px;">
-      
-<link href="https://cdn.bootcdn.net/ajax/libs/Swiper/5.4.1/css/swiper.min.css" rel="stylesheet">
 
+<!-- 文章网格 -->
+<section id="articles" class="py-24 px-6 max-w-6xl mx-auto border-t border-[#e8e8ed]/50">
+  <div class="text-center mb-16 reveal">
+    <h2 class="text-4xl md:text-5xl font-bold tracking-tight mb-8">最新洞察。一览无余。</h2>
 
+    <div class="flex flex-wrap justify-center gap-2 mb-12 bg-white p-1 rounded-full inline-flex shadow-sm border border-gray-100" id="filter-container">
+      <button class="filter-btn active" data-filter="all">全部</button>
+      <button class="filter-btn" data-filter="featured">精选</button>
+      <button class="filter-btn" data-filter="年度总结">年度总结</button>
+      <button class="filter-btn" data-filter="生活随笔">生活随笔</button>
+      <button class="filter-btn" data-filter="技术博客">技术博客</button>
+    </div>
+  </div>
 
-<div class="swiper-length" style="display: none;">0</div>
-<div id="appSwiper"
-  class="swiper-no-swiping"
-  @mouseenter="stopAutoPlay()" 
-  @mouseleave="startAutoPlay()"
->
-  <swiper v-cloak ref="mySwiper" :options="swiperOptions" @slideChangeTransitionEnd="slideChangeTransitionEnd">
+  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="article-grid">
     
-      <swiper-slide>
-        <div class="item swiper-lazy" data-background="/medias/1.jpg" style="background-size: 90000px; 
-          background-position: center center;">
-            <div class="flag">
-              <div class="img-mask swiper-lazy" data-background="/medias/1.jpg" style="height: 100%; background-size: cover; 
-                background-position: center center;">
-                <div class="swiper-lazy-preloader swiper-lazy-preloader-white"></div>   
-              </div>
-              <div class="flag-text">
-                <div>
-                  <div class="title ani animated" swiper-animate-effect="fadeInDown" swiper-animate-duration="0.2s" swiper-animate-delay="0.1s">Welcome~</div>
-                  <div class="excerpt ani animated" swiper-animate-effect="fadeInDown" swiper-animate-duration="0.2s" swiper-animate-delay="0.1s">What`up danger</div>
-                </div>
-                <div style="display: flex;">
-                  <div class="ani animated" swiper-animate-effect="fadeInDown" swiper-animate-duration="0.2s" swiper-animate-delay="0.1s"><a target="_blank" rel="noopener" href="https://github.com/yuang01/hexo-theme-bamboo" class="read-more border-color bg-color" style="display: inline-block; z-index:1;">阅读更多</a></div>
-                  <div class="ani animated" style="margin-left: 10px;" swiper-animate-effect="fadeInDown" swiper-animate-duration="0.2s" swiper-animate-delay="0.1s"><a target="_blank" rel="noopener" href="https://github.com/yuang01/hexo-theme-bamboo" class="read-more " style="display: inline-block; z-index:1;border: 1px solid white;">Download theme</a></div>
-                </div>
-              </div>
-            </div>
-          </div>
-      </swiper-slide>
-    
-  </swiper>
-</div>
-
-<script src="/js/swiper.min.js"></script>
-
-
-<script src="/js/vue-awesome-swiper.js"></script>
-
-
-<script src="/js/swiper.animate1.0.3.min.js"></script>
-
-<script type="text/javascript">
-  Vue.use(window.VueAwesomeSwiper)
-</script>
-<script>
-  let autoplay = 'true';
-  let delay = '5000';
-  let loop = JSON.parse('true');
-  let effect = 'slide';
-  let swiperLength = parseInt(document.querySelector(".swiper-length").innerText);
-  var vm = new Vue({
-    el: '#appSwiper',
-    data: {
-      swiperOptions: {
-        pagination: {
-          el: '.swiper-pagination',
-          clickable: true // 允许点击小圆点跳转
-        },
-        loop: loop ? true : false,
-        effect, // fade
-        autoplay: (autoplay && swiperLength > 1) ? {
-  　　　　delay,
-  　　　　disableOnInteraction: false // 手动切换之后继续自动轮播
-    　　} : false,
-        navigation: {
-          nextEl: '.swiper-button-next',
-          prevEl: '.swiper-button-prev',
-        },
-        lazy: {
-          loadPrevNext: true,
-        },
-        on:{
-          init: function() {
-            swiperAnimateCache(this); //隐藏动画元素 
-            swiperAnimate(this); //初始化完成开始动画
-          }, 
-          slideChangeTransitionEnd: function(){ 
-            swiperAnimate(this); //每个slide切换结束时也运行当前slide动画
-          } 
-        }
-        // Some Swiper option/callback...
-      }
-    },
-    computed: {
-      swiper() {
-        return this.$refs.mySwiper.$swiper
-      }
-    },
-    mounted() {
-      // console.log('Current Swiper instance object', this.swiper)
-      // this.swiper.slideTo(0, 1000, false)
-    },
-    methods: {
-      stopAutoPlay() {
-        (autoplay && swiperLength > 1) && this.swiper.autoplay.stop();
-      },
-      startAutoPlay() {
-        (autoplay && swiperLength > 1) && this.swiper.autoplay.start();
-      },
-      slideChangeTransitionEnd() {
-        console.log('1');
-      }
-    },
-    created() {}
-  })
-</script>
-
-<style>
-.swiper-container {
-  overflow: hidden;
-  z-index: 0;
-}
-.swiper-slide {
-  height: 350px;
-  position: relative;
-}
-.swiper-button-prev,
-.swiper-button-next {
-  padding: 10px 10px;
-  transition: background 0.2s;
-}
-.swiper-button-prev:hover,
-.swiper-button-next:hover {
-  background: rgba(0, 0, 0, 0.2);
-}
-.swiper-slide .item {
-  width: 100%;
-  height: 100%;
-}
-.flag {
-  position: relative;
-  width: 60%;
-  margin: 0 auto;
-  color: #ffffff;
-  height: 100%;
-  background: #000;
-}
-.flag img {
-  min-height: 100%;
-}
-.flag-text {
-  position: absolute;
-  top: 50px;
-  left: 50px;
-  width: 80%;
-  height: 280px;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-}
-.flag-text .title {
-  font-size: 1.8rem;
-}
-.flag-text .excerpt {
-  width: 70%;
-  line-height: 27px;
-  height: 135px;
-  margin-top: 2%;
-  display: -webkit-box;
-  -webkit-box-orient: vertical;
-  -webkit-line-clamp: 5;
-  overflow: hidden;
-}
-.swiper-pagination-bullet-active {
-  opacity: 1;
-  background-color: #42b983;
-}
-.img-mask {
-  opacity:0.6; filter: alpha(opacity=60);
-}
-.flag-text .read-more {
-  margin-bottom: 30px;
-  padding: 5px 15px;
-  color: #ffffff;
-  border-radius: 20px;
-}
-@media (min-width: 992px) {
-  .swiper-button-prev {
-    margin-left: 20%;
-    transform: translateX(-180%);
-  }
-  .swiper-button-next {
-    margin-right: 20%;
-    transform: translateX(180%);
-  }
-  .flag-text .title {
-    width: 80%;
-    line-height: 35px;
-    max-height: 70px;
-    display: -webkit-box;
-    -webkit-box-orient: vertical;
-    -webkit-line-clamp: 2;
-    overflow: hidden;
-  }
-}
-@media (max-width: 992px) {
-  .flag {
-    width: 100%;
-  }
-  .flag-text .title {
-    font-size: 1.5rem;
-    margin-top: 50px;
-  }
-  .flag-text {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 80%;
-    height: 100%;
-    margin-left: 50%;
-    transform: translateX(-50%);
-  }
-  .flag-text .excerpt {
-    width: 100%;
-    line-height: 20px;
-    height: 100px;
-    display: -webkit-box;
-    -webkit-box-orient: vertical;
-    -webkit-line-clamp: 5;
-    overflow: hidden;
-  }
-  .flag-text .read-more {
-    margin-bottom: 80px;
-  }
-}
-@media (max-width: 992px) and (min-width: 551px) {
-  .flag-text .excerpt {
-    width: 70%;
-  }
-}
-@media (max-width: 551px) {
-  .swiper-slide {
-    height: 250px;
-  }
-  .flag-text .title {
-    line-height: 30px;
-    max-height: 60px;
-    display: -webkit-box;
-    -webkit-box-orient: vertical;
-    -webkit-line-clamp: 2;
-    overflow: hidden;
-    margin-top: 20px;
-  }
-  .flag-text .excerpt {
-    font-size: 1rem;
-    line-height: 20px;
-    height: 80px;
-    display: -webkit-box;
-    -webkit-box-orient: vertical;
-    -webkit-line-clamp: 4;
-  }
-  .flag-text .excerpt { 
-    margin-top: 10px;
-  }
-  .flag-text .read-more {
-    margin-top: 10px;
-    margin-bottom: 50px;
-  }
-  .swiper-button-prev,
-  .swiper-button-next {
-    transform: scale(0.5);
-  }
-  .swiper-button-prev {
-    left: 0;
-  }
-  .swiper-button-next {
-    right: 0;
-  }
-}
-</style>
-
-
-
-<div class="topArticle" data-aos="fade-up">
-	<h3><i class="fa fa-thumbs-o-up" aria-hidden="true"></i>推荐文章</h3>
-	<div class="articles">
-		
-			
-		
-			
-		
-			
-		
-			
-		
-			
-		
-			
-		
-			
-		
-			
-		
-			
-		
-			
-		
-			
-		
-			
-		
-			
-		
-			
-		
-			
-		
-			
-		
-			
-		
-			
-		
-			
-		
-			
-		
-			
-		
-			
-		
-			
-		
-			
-		
-			
-		
-			
-		
-			
-		
-			
-		
-			
-		
-			
-		
-			
-		
-			
-		
-			
-		
-			
-		
-			
-		
-			
-		
-			
-		
-			
-		
-			
-		
-			
-		
-			
-		
-	</div>
-</div>
-
-
-
-
-<section class="posts">
-  
-    <article class="post" data-aos="fade-up" style="flex-direction: row-reverse;">
-      <div class="post-main">
-        <div class="post-info">
-          <div class="post-time">
-            <i class="fa fa-clock-o" aria-hidden="true"></i>
-            <span class="post-time">2026-04-11</span>
-          </div>
-          <div class="post-title">
-            <a class="post-title-link" href="/2026/04/11/%E6%91%B8%E9%B1%BC%E6%97%A5%E8%AE%B02.0/">摸鱼日记2.0</a>
-          </div>
-          <div class="post-meta">
-            <div class="post-tags">
-              
-            </div>
-            <div class="post-categories">
-              
-            </div>
-          </div>
-          <div class="post-img-mobile">
-            
-              
-              <a href="/2026/04/11/%E6%91%B8%E9%B1%BC%E6%97%A5%E8%AE%B02.0/" class="lazyload" data-original="/medias/10.jpg" style="background-size: cover; 
-                background-position: center center;">
-              </a>
-            
-          </div>
-          <div class="post-content">
-            摸鱼日记2.0序.丧钟为谁而鸣​    三载归来，标题重启。字少事大，句句诛心。昔在大厂，指扣生机。今坠红尘，委身教坊。蒙尘旧剑，以此接客。逻辑卖淫，且为卖唱。一圈循环，两时余长。注水伪经，误人儿郎。术业蒙羞，本心受创。名曰传道，实则行商。
-          </div>
-        </div>
-        <div class="post-more">
-          <a href="/2026/04/11/%E6%91%B8%E9%B1%BC%E6%97%A5%E8%AE%B02.0/">
-            <i class="iconfont iconmore" style="float: right;" title="阅读更多"></i>
-          </a>
-        </div>
+    <article class="apple-card p-10 flex flex-col justify-between reveal cursor-pointer article-item
+      bg-[#1d1d1f] text-white"
+      id="post-0"
+      onclick="window.location.href='/2023/07/12/5.30/'"
+      data-category=""
+      data-sticky="true">
+      <div>
+        <span class="text-white/50 text-xs font-semibold uppercase tracking-widest">
+          ★ 精选
+        </span>
+        <h3 class="text-2xl md:text-3xl font-bold mt-4 mb-4 leading-tight tracking-tight">实习随笔</h3>
+        <p class="text-white/70 text-[15px] leading-relaxed">实习随笔题记——班不可一日不上 鱼不可一日不摸 
+噫嘘唏 危呼累哉 上班之难  难于上青天。朝九及晚六 下班何茫然 吾才十几二十岁 不能游乐赏人间。魔都郊区住板房 返工滴滴不要钱。屎山代码看到死，然后前端后端相勾连，前有Angular 琐碎之代码 后有boot版本老旧之无力回天。自己写的不维护 实习进来怨破天。也曾想重构 版本冲突愁一天。扪参历井仰胁息，以手抚膺坐长叹
+问君北漂何时还 机票两千不可...</p>
       </div>
-      <div class="post-img">
-        
-          <a href="/2026/04/11/%E6%91%B8%E9%B1%BC%E6%97%A5%E8%AE%B02.0/" class="lazyload" data-original="/medias/10.jpg" style="background-size: cover; 
-            background-position: center center;">
-          </a>
-        
+      <div class="mt-8 flex justify-between items-end">
+        <span class="text-white/50 text-xs font-medium">07月12日</span>
+        <span class="bg-white/10 text-white w-8 h-8 rounded-full flex items-center justify-center font-bold text-lg">&#8599;</span>
       </div>
     </article>
-  
-    <article class="post" data-aos="fade-up" style="">
-      <div class="post-main">
-        <div class="post-info">
-          <div class="post-time">
-            <i class="fa fa-clock-o" aria-hidden="true"></i>
-            <span class="post-time">2026-04-05</span>
-          </div>
-          <div class="post-title">
-            <a class="post-title-link" href="/2026/04/05/%E6%9D%AD%E5%B7%9E%E6%B8%B8%E8%AE%B0/">杭州游记</a>
-          </div>
-          <div class="post-meta">
-            <div class="post-tags">
-              
-            </div>
-            <div class="post-categories">
-              
-            </div>
-          </div>
-          <div class="post-img-mobile">
-            
-              
-              <a href="/2026/04/05/%E6%9D%AD%E5%B7%9E%E6%B8%B8%E8%AE%B0/" class="lazyload" data-original="/medias/4.jpg" style="background-size: cover; 
-                background-position: center center;">
-              </a>
-            
-          </div>
-          <div class="post-content">
-            杭州游记(2合1)序​    好了，所有单位注意，工作暂停，内耗暂停，全世界暂停，人在广州(东莞工位)，刚下飞机(昨天下午)，现在开始写我们的第一篇旅行游记！是的第一篇，23年的上海篇烂尾烂到现在还躺在那，还有什么南京杭州苏州…..,不管啦
-          </div>
-        </div>
-        <div class="post-more">
-          <a href="/2026/04/05/%E6%9D%AD%E5%B7%9E%E6%B8%B8%E8%AE%B0/">
-            <i class="iconfont iconmore" style="" title="阅读更多"></i>
-          </a>
-        </div>
+    
+    <article class="apple-card p-10 flex flex-col justify-between reveal cursor-pointer article-item
+      "
+      id="post-1"
+      onclick="window.location.href='/2026/04/11/%E6%91%B8%E9%B1%BC%E6%97%A5%E8%AE%B02.0/'"
+      data-category=""
+      data-sticky="">
+      <div>
+        <span class="text-[#86868b] text-xs font-semibold uppercase tracking-widest">
+          文章
+        </span>
+        <h3 class="text-2xl md:text-3xl font-bold mt-4 mb-4 leading-tight tracking-tight">摸鱼日记2.0</h3>
+        <p class="text-[#1d1d1f]/70 text-[15px] leading-relaxed">摸鱼日记2.0序.丧钟为谁而鸣​    三载归来，尘满衣冠。欲语先哽，落笔如剜。 昔在西曹，键作马鞍。今栖东市，舌耕为餐。满堂童子，目似鱼攒。我吐珠玉，彼观泥丸。 注水文牍，汗牛充栏。名曰课业，实乃欺...</p>
       </div>
-      <div class="post-img">
-        
-          <a href="/2026/04/05/%E6%9D%AD%E5%B7%9E%E6%B8%B8%E8%AE%B0/" class="lazyload" data-original="/medias/4.jpg" style="background-size: cover; 
-            background-position: center center;">
-          </a>
-        
+      <div class="mt-8 flex justify-between items-end">
+        <span class="text-[#86868b] text-xs font-medium">04月11日</span>
+        <span class="bg-gray-100 text-gray-600 w-8 h-8 rounded-full flex items-center justify-center font-bold text-lg">&#8599;</span>
       </div>
     </article>
-  
-    <article class="post" data-aos="fade-up" style="flex-direction: row-reverse;">
-      <div class="post-main">
-        <div class="post-info">
-          <div class="post-time">
-            <i class="fa fa-clock-o" aria-hidden="true"></i>
-            <span class="post-time">2026-03-20</span>
-          </div>
-          <div class="post-title">
-            <a class="post-title-link" href="/2026/03/20/%E6%88%91%E4%BB%AC%E4%B8%80%E5%BF%83%E5%8F%AA%E6%83%B3%E7%9D%80%E8%83%9C%E5%88%A9/">我们一心只想着胜利</a>
-          </div>
-          <div class="post-meta">
-            <div class="post-tags">
-              
-            </div>
-            <div class="post-categories">
-              
-            </div>
-          </div>
-          <div class="post-img-mobile">
-            
-              
-              <a href="/2026/03/20/%E6%88%91%E4%BB%AC%E4%B8%80%E5%BF%83%E5%8F%AA%E6%83%B3%E7%9D%80%E8%83%9C%E5%88%A9/" class="lazyload" data-original="/medias/6.jpg" style="background-size: cover; 
-                background-position: center center;">
-              </a>
-            
-          </div>
-          <div class="post-content">
-            
+    
+    <article class="apple-card p-10 flex flex-col justify-between reveal cursor-pointer article-item
+      "
+      id="post-2"
+      onclick="window.location.href='/2026/04/05/%E6%9D%AD%E5%B7%9E%E6%B8%B8%E8%AE%B0/'"
+      data-category=""
+      data-sticky="">
+      <div>
+        <span class="text-[#86868b] text-xs font-semibold uppercase tracking-widest">
+          文章
+        </span>
+        <h3 class="text-2xl md:text-3xl font-bold mt-4 mb-4 leading-tight tracking-tight">杭州游记</h3>
+        <p class="text-[#1d1d1f]/70 text-[15px] leading-relaxed">杭州游记(2合1)序​    好了，所有单位注意，工作暂停，内耗暂停，全世界暂停，人在广州(东莞工位)，刚下飞机(昨天下午)，现在开始写我们的第一篇旅行游记！是的第一篇，23年的上海篇烂尾烂到现在还躺...</p>
+      </div>
+      <div class="mt-8 flex justify-between items-end">
+        <span class="text-[#86868b] text-xs font-medium">04月05日</span>
+        <span class="bg-gray-100 text-gray-600 w-8 h-8 rounded-full flex items-center justify-center font-bold text-lg">&#8599;</span>
+      </div>
+    </article>
+    
+    <article class="apple-card p-10 flex flex-col justify-between reveal cursor-pointer article-item
+      "
+      id="post-3"
+      onclick="window.location.href='/2026/03/20/%E6%88%91%E4%BB%AC%E4%B8%80%E5%BF%83%E5%8F%AA%E6%83%B3%E7%9D%80%E8%83%9C%E5%88%A9/'"
+      data-category=""
+      data-sticky="">
+      <div>
+        <span class="text-[#86868b] text-xs font-semibold uppercase tracking-widest">
+          文章
+        </span>
+        <h3 class="text-2xl md:text-3xl font-bold mt-4 mb-4 leading-tight tracking-tight">我们一心只想着胜利</h3>
+        <p class="text-[#1d1d1f]/70 text-[15px] leading-relaxed">
 这里鸟儿不唱 树林也成废墟只有我们肩并着肩 牢牢扎根此地硝烟笼罩着祖国山河 看城市燃烧成瓦砾此刻我们一心只想着胜利以一当十，任何代价在所不惜以一当十，任何代价在所不惜！
-前面炮声如霹雳 但它虚弱无力敌人疯狂，决不能压倒我们常胜的第十营所向
-          </div>
-        </div>
-        <div class="post-more">
-          <a href="/2026/03/20/%E6%88%91%E4%BB%AC%E4%B8%80%E5%BF%83%E5%8F%AA%E6%83%B3%E7%9D%80%E8%83%9C%E5%88%A9/">
-            <i class="iconfont iconmore" style="float: right;" title="阅读更多"></i>
-          </a>
-        </div>
+前面炮声如霹雳 但它虚弱无力...</p>
       </div>
-      <div class="post-img">
-        
-          <a href="/2026/03/20/%E6%88%91%E4%BB%AC%E4%B8%80%E5%BF%83%E5%8F%AA%E6%83%B3%E7%9D%80%E8%83%9C%E5%88%A9/" class="lazyload" data-original="/medias/6.jpg" style="background-size: cover; 
-            background-position: center center;">
-          </a>
-        
+      <div class="mt-8 flex justify-between items-end">
+        <span class="text-[#86868b] text-xs font-medium">03月20日</span>
+        <span class="bg-gray-100 text-gray-600 w-8 h-8 rounded-full flex items-center justify-center font-bold text-lg">&#8599;</span>
       </div>
     </article>
-  
-    <article class="post" data-aos="fade-up" style="">
-      <div class="post-main">
-        <div class="post-info">
-          <div class="post-time">
-            <i class="fa fa-clock-o" aria-hidden="true"></i>
-            <span class="post-time">2025-12-31</span>
-          </div>
-          <div class="post-title">
-            <a class="post-title-link" href="/2025/12/31/2025%E5%B9%B4%E5%BA%A6%E6%80%BB%E7%BB%93/">2025年度总结</a>
-          </div>
-          <div class="post-meta">
-            <div class="post-tags">
-              
-            </div>
-            <div class="post-categories">
-              
-            </div>
-          </div>
-          <div class="post-img-mobile">
-            
-              
-              <a href="/2025/12/31/2025%E5%B9%B4%E5%BA%A6%E6%80%BB%E7%BB%93/" class="lazyload" data-original="/medias/9.jpg" style="background-size: cover; 
-                background-position: center center;">
-              </a>
-            
-          </div>
-          <div class="post-content">
-            2025年度总结序二零二六一月二号4：00PM，我在清远某家咖啡馆里面，人很多，这不是《年总》常在编辑地点，现在也不是第一次编写时间，这甚至不是第一台编辑设备。
-如何总结今年？是每年这时候都要面对的问题，就算状态差到24年那样，在《年总》的
-          </div>
-        </div>
-        <div class="post-more">
-          <a href="/2025/12/31/2025%E5%B9%B4%E5%BA%A6%E6%80%BB%E7%BB%93/">
-            <i class="iconfont iconmore" style="" title="阅读更多"></i>
-          </a>
-        </div>
+    
+    <article class="apple-card p-10 flex flex-col justify-between reveal cursor-pointer article-item
+      "
+      id="post-4"
+      onclick="window.location.href='/2025/12/31/2025%E5%B9%B4%E5%BA%A6%E6%80%BB%E7%BB%93/'"
+      data-category=""
+      data-sticky="">
+      <div>
+        <span class="text-[#86868b] text-xs font-semibold uppercase tracking-widest">
+          文章
+        </span>
+        <h3 class="text-2xl md:text-3xl font-bold mt-4 mb-4 leading-tight tracking-tight">2025年度总结</h3>
+        <p class="text-[#1d1d1f]/70 text-[15px] leading-relaxed">2025年度总结序二零二六一月二号4：00PM，我在清远某家咖啡馆里面，人很多，这不是《年总》常在编辑地点，现在也不是第一次编写时间，这甚至不是第一台编辑设备。
+如何总结今年？是每年这时候都要面对的问...</p>
       </div>
-      <div class="post-img">
-        
-          <a href="/2025/12/31/2025%E5%B9%B4%E5%BA%A6%E6%80%BB%E7%BB%93/" class="lazyload" data-original="/medias/9.jpg" style="background-size: cover; 
-            background-position: center center;">
-          </a>
-        
+      <div class="mt-8 flex justify-between items-end">
+        <span class="text-[#86868b] text-xs font-medium">12月31日</span>
+        <span class="bg-gray-100 text-gray-600 w-8 h-8 rounded-full flex items-center justify-center font-bold text-lg">&#8599;</span>
       </div>
     </article>
-  
-    <article class="post" data-aos="fade-up" style="flex-direction: row-reverse;">
-      <div class="post-main">
-        <div class="post-info">
-          <div class="post-time">
-            <i class="fa fa-clock-o" aria-hidden="true"></i>
-            <span class="post-time">2025-12-14</span>
-          </div>
-          <div class="post-title">
-            <a class="post-title-link" href="/2025/12/14/26gitbirthday/">Git Birthday 2025</a>
-          </div>
-          <div class="post-meta">
-            <div class="post-tags">
-              
-            </div>
-            <div class="post-categories">
-              
-            </div>
-          </div>
-          <div class="post-img-mobile">
-            
-              
-              <a href="/2025/12/14/26gitbirthday/" class="lazyload" data-original="/medias/3.jpg" style="background-size: cover; 
-                background-position: center center;">
-              </a>
-            
-          </div>
-          <div class="post-content">
-            前序很明显，今天不是十一月二十号，我本来想拖个几天的，那时貌似刚得到一些实质性的成果，然后加上我觉得那时还没到时间去庆祝，后面觉得也许还有个大的…… Whatever，现在我躺在海南博鳌民宿的床上，稍微转头就能看到大海，敲打键盘，写下今年收
-          </div>
-        </div>
-        <div class="post-more">
-          <a href="/2025/12/14/26gitbirthday/">
-            <i class="iconfont iconmore" style="float: right;" title="阅读更多"></i>
-          </a>
-        </div>
+    
+    <article class="apple-card p-10 flex flex-col justify-between reveal cursor-pointer article-item
+      "
+      id="post-5"
+      onclick="window.location.href='/2025/12/14/26gitbirthday/'"
+      data-category=""
+      data-sticky="">
+      <div>
+        <span class="text-[#86868b] text-xs font-semibold uppercase tracking-widest">
+          文章
+        </span>
+        <h3 class="text-2xl md:text-3xl font-bold mt-4 mb-4 leading-tight tracking-tight">Git Birthday 2025</h3>
+        <p class="text-[#1d1d1f]/70 text-[15px] leading-relaxed">前序很明显，今天不是十一月二十号，我本来想拖个几天的，那时貌似刚得到一些实质性的成果，然后加上我觉得那时还没到时间去庆祝，后面觉得也许还有个大的…… Whatever，现在我躺在海南博鳌民宿的床上，稍...</p>
       </div>
-      <div class="post-img">
-        
-          <a href="/2025/12/14/26gitbirthday/" class="lazyload" data-original="/medias/3.jpg" style="background-size: cover; 
-            background-position: center center;">
-          </a>
-        
+      <div class="mt-8 flex justify-between items-end">
+        <span class="text-[#86868b] text-xs font-medium">12月14日</span>
+        <span class="bg-gray-100 text-gray-600 w-8 h-8 rounded-full flex items-center justify-center font-bold text-lg">&#8599;</span>
       </div>
     </article>
-  
-    <article class="post" data-aos="fade-up" style="">
-      <div class="post-main">
-        <div class="post-info">
-          <div class="post-time">
-            <i class="fa fa-clock-o" aria-hidden="true"></i>
-            <span class="post-time">2025-06-25</span>
-          </div>
-          <div class="post-title">
-            <a class="post-title-link" href="/2025/06/25/2025%E6%AF%95%E4%B8%9A/">毕业快乐</a>
-          </div>
-          <div class="post-meta">
-            <div class="post-tags">
-              
-            </div>
-            <div class="post-categories">
-              
-            </div>
-          </div>
-          <div class="post-img-mobile">
-            
-              
-              <a href="/2025/06/25/2025%E6%AF%95%E4%B8%9A/" class="lazyload" data-original="/medias/13.jpg" style="background-size: cover; 
-                background-position: center center;">
-              </a>
-            
-          </div>
-          <div class="post-content">
-            毕业快乐！Part.2绪写点什么好呢？第二次了毕业了，没什么情绪，也不写成流水账，总归得记录点什么。这次毕业其实蛮多话题讲的，甚至考虑要不要把标题改成：年中总结，毕竟现在六月底了。毕业嘛，自然少不了对过去学生生活的感慨怀念和对未来的猜想，但
-          </div>
-        </div>
-        <div class="post-more">
-          <a href="/2025/06/25/2025%E6%AF%95%E4%B8%9A/">
-            <i class="iconfont iconmore" style="" title="阅读更多"></i>
-          </a>
-        </div>
+    
+    <article class="apple-card p-10 flex flex-col justify-between reveal cursor-pointer article-item
+      "
+      id="post-6"
+      onclick="window.location.href='/2025/06/25/2025%E6%AF%95%E4%B8%9A/'"
+      data-category=""
+      data-sticky="">
+      <div>
+        <span class="text-[#86868b] text-xs font-semibold uppercase tracking-widest">
+          文章
+        </span>
+        <h3 class="text-2xl md:text-3xl font-bold mt-4 mb-4 leading-tight tracking-tight">毕业快乐</h3>
+        <p class="text-[#1d1d1f]/70 text-[15px] leading-relaxed">毕业快乐！Part.2绪写点什么好呢？第二次了毕业了，没什么情绪，也不写成流水账，总归得记录点什么。这次毕业其实蛮多话题讲的，甚至考虑要不要把标题改成：年中总结，毕竟现在六月底了。毕业嘛，自然少不了对...</p>
       </div>
-      <div class="post-img">
-        
-          <a href="/2025/06/25/2025%E6%AF%95%E4%B8%9A/" class="lazyload" data-original="/medias/13.jpg" style="background-size: cover; 
-            background-position: center center;">
-          </a>
-        
+      <div class="mt-8 flex justify-between items-end">
+        <span class="text-[#86868b] text-xs font-medium">06月25日</span>
+        <span class="bg-gray-100 text-gray-600 w-8 h-8 rounded-full flex items-center justify-center font-bold text-lg">&#8599;</span>
       </div>
     </article>
-  
-    <article class="post" data-aos="fade-up" style="flex-direction: row-reverse;">
-      <div class="post-main">
-        <div class="post-info">
-          <div class="post-time">
-            <i class="fa fa-clock-o" aria-hidden="true"></i>
-            <span class="post-time">2025-05-10</span>
-          </div>
-          <div class="post-title">
-            <a class="post-title-link" href="/2025/05/10/5.1/">五一随笔</a>
-          </div>
-          <div class="post-meta">
-            <div class="post-tags">
-              
-            </div>
-            <div class="post-categories">
-              
-            </div>
-          </div>
-          <div class="post-img-mobile">
-            
-              
-              <a href="/2025/05/10/5.1/" class="lazyload" data-original="/medias/6.jpg" style="background-size: cover; 
-                background-position: center center;">
-              </a>
-            
-          </div>
-          <div class="post-content">
-            五一随笔绪论
-“Sometimes I have thought it would be an excellent rule to live each day as if we should die tomorrow.”          
-          </div>
-        </div>
-        <div class="post-more">
-          <a href="/2025/05/10/5.1/">
-            <i class="iconfont iconmore" style="float: right;" title="阅读更多"></i>
-          </a>
-        </div>
+    
+    <article class="apple-card p-10 flex flex-col justify-between reveal cursor-pointer article-item
+      "
+      id="post-7"
+      onclick="window.location.href='/2025/05/10/5.1/'"
+      data-category=""
+      data-sticky="">
+      <div>
+        <span class="text-[#86868b] text-xs font-semibold uppercase tracking-widest">
+          文章
+        </span>
+        <h3 class="text-2xl md:text-3xl font-bold mt-4 mb-4 leading-tight tracking-tight">五一随笔</h3>
+        <p class="text-[#1d1d1f]/70 text-[15px] leading-relaxed">五一随笔绪论
+“Sometimes I have thought it would be an excellent rule to live each day as if we should die ...</p>
       </div>
-      <div class="post-img">
-        
-          <a href="/2025/05/10/5.1/" class="lazyload" data-original="/medias/6.jpg" style="background-size: cover; 
-            background-position: center center;">
-          </a>
-        
+      <div class="mt-8 flex justify-between items-end">
+        <span class="text-[#86868b] text-xs font-medium">05月10日</span>
+        <span class="bg-gray-100 text-gray-600 w-8 h-8 rounded-full flex items-center justify-center font-bold text-lg">&#8599;</span>
       </div>
     </article>
-  
-    <article class="post" data-aos="fade-up" style="">
-      <div class="post-main">
-        <div class="post-info">
-          <div class="post-time">
-            <i class="fa fa-clock-o" aria-hidden="true"></i>
-            <span class="post-time">2025-01-17</span>
-          </div>
-          <div class="post-title">
-            <a class="post-title-link" href="/2025/01/17/%E8%80%83%E7%A0%94/">考研</a>
-          </div>
-          <div class="post-meta">
-            <div class="post-tags">
-              
-            </div>
-            <div class="post-categories">
-              
-            </div>
-          </div>
-          <div class="post-img-mobile">
-            
-              
-              <a href="/2025/01/17/%E8%80%83%E7%A0%94/" class="lazyload" data-original="/medias/2.jpg" style="background-size: cover; 
-                background-position: center center;">
-              </a>
-            
-          </div>
-          <div class="post-content">
-            考研序这个项目在今年所占比重过大，实施过程对自我成长照成了十分恶劣的影响，若不去深究原因，可能会对未来产生无法预测的后果。情绪稳定下来后，我将这次任务的结果定性为失败，由于这次任务所暴露出来多个严重问题，我决定把它从年度总结抽离出来，作为警
-          </div>
-        </div>
-        <div class="post-more">
-          <a href="/2025/01/17/%E8%80%83%E7%A0%94/">
-            <i class="iconfont iconmore" style="" title="阅读更多"></i>
-          </a>
-        </div>
+    
+    <article class="apple-card p-10 flex flex-col justify-between reveal cursor-pointer article-item
+      "
+      id="post-8"
+      onclick="window.location.href='/2025/01/18/%E7%8E%8B%E5%AE%B6%E5%8D%AB/'"
+      data-category=""
+      data-sticky="">
+      <div>
+        <span class="text-[#86868b] text-xs font-semibold uppercase tracking-widest">
+          文章
+        </span>
+        <h3 class="text-2xl md:text-3xl font-bold mt-4 mb-4 leading-tight tracking-tight">记</h3>
+        <p class="text-[#1d1d1f]/70 text-[15px] leading-relaxed">2021年1月17日下午两点五十八分我去宿舍楼下的实训室看电影 不过这次 我没有点麻辣烫
+...</p>
       </div>
-      <div class="post-img">
-        
-          <a href="/2025/01/17/%E8%80%83%E7%A0%94/" class="lazyload" data-original="/medias/2.jpg" style="background-size: cover; 
-            background-position: center center;">
-          </a>
-        
+      <div class="mt-8 flex justify-between items-end">
+        <span class="text-[#86868b] text-xs font-medium">01月18日</span>
+        <span class="bg-gray-100 text-gray-600 w-8 h-8 rounded-full flex items-center justify-center font-bold text-lg">&#8599;</span>
       </div>
     </article>
-  
-    <article class="post" data-aos="fade-up" style="flex-direction: row-reverse;">
-      <div class="post-main">
-        <div class="post-info">
-          <div class="post-time">
-            <i class="fa fa-clock-o" aria-hidden="true"></i>
-            <span class="post-time">2025-01-10</span>
-          </div>
-          <div class="post-title">
-            <a class="post-title-link" href="/2025/01/10/2024%E5%B9%B4%E5%BA%A6%E6%80%BB%E7%BB%93/">2024年度总结</a>
-          </div>
-          <div class="post-meta">
-            <div class="post-tags">
-              
-            </div>
-            <div class="post-categories">
-              
-            </div>
-          </div>
-          <div class="post-img-mobile">
-            
-              
-              <a href="/2025/01/10/2024%E5%B9%B4%E5%BA%A6%E6%80%BB%E7%BB%93/" class="lazyload" data-original="/medias/10.jpg" style="background-size: cover; 
-                background-position: center center;">
-              </a>
-            
-          </div>
-          <div class="post-content">
-            2024年度总结序现在是2024年十一月四号，一个奉行“活在当下”的利己主义者，想给今年按下快进键。
-现在是十二月三十号，我在书房坐着，两年前的这个时候我也坐在这个位置上进行插本的备考。对我来说，一年的结束是年度总结提交到git上面，随着控
-          </div>
-        </div>
-        <div class="post-more">
-          <a href="/2025/01/10/2024%E5%B9%B4%E5%BA%A6%E6%80%BB%E7%BB%93/">
-            <i class="iconfont iconmore" style="float: right;" title="阅读更多"></i>
-          </a>
-        </div>
+    
+    <article class="apple-card p-10 flex flex-col justify-between reveal cursor-pointer article-item
+      "
+      id="post-9"
+      onclick="window.location.href='/2025/01/18/%E5%B9%B4%E5%BA%A6%E6%80%BB%E7%BB%93/'"
+      data-category=""
+      data-sticky="">
+      <div>
+        <span class="text-[#86868b] text-xs font-semibold uppercase tracking-widest">
+          文章
+        </span>
+        <h3 class="text-2xl md:text-3xl font-bold mt-4 mb-4 leading-tight tracking-tight">年度总结</h3>
+        <p class="text-[#1d1d1f]/70 text-[15px] leading-relaxed">年度总结大体的大体  今年过得还是不错的 上半年的高三 中间的旅游和宅 下半年的带专生活 
+关于疫情 有句未能写入高考作文的话：时代的一粒灰 落到一个人头上就是一座山。这倒也并不无道理
+只是 那山头压...</p>
       </div>
-      <div class="post-img">
-        
-          <a href="/2025/01/10/2024%E5%B9%B4%E5%BA%A6%E6%80%BB%E7%BB%93/" class="lazyload" data-original="/medias/10.jpg" style="background-size: cover; 
-            background-position: center center;">
-          </a>
-        
+      <div class="mt-8 flex justify-between items-end">
+        <span class="text-[#86868b] text-xs font-medium">01月18日</span>
+        <span class="bg-gray-100 text-gray-600 w-8 h-8 rounded-full flex items-center justify-center font-bold text-lg">&#8599;</span>
       </div>
     </article>
-  
-    <article class="post" data-aos="fade-up" style="">
-      <div class="post-main">
-        <div class="post-info">
-          <div class="post-time">
-            <i class="fa fa-clock-o" aria-hidden="true"></i>
-            <span class="post-time">2024-12-05</span>
-          </div>
-          <div class="post-title">
-            <a class="post-title-link" href="/2024/12/05/%E6%AF%95%E4%B8%9A%E9%9A%8F%E7%AC%94/">毕业照</a>
-          </div>
-          <div class="post-meta">
-            <div class="post-tags">
-              
-            </div>
-            <div class="post-categories">
-              
-            </div>
-          </div>
-          <div class="post-img-mobile">
-            
-              
-              <a href="/2024/12/05/%E6%AF%95%E4%B8%9A%E9%9A%8F%E7%AC%94/" class="lazyload" data-original="/medias/11.jpg" style="background-size: cover; 
-                background-position: center center;">
-              </a>
-            
-          </div>
-          <div class="post-content">
-            
-人们无法同时拥有青春和对青春的感受。那是我们回不去的青春。往前看，别回头。心脏突然少跳了一下，正好补上了初次相见的心动。(少不了的爱情元素)欲买桂花同载酒，终不似，少年游。(来点名言名句)夏天还会来，但十八岁的夏天不会再来了。…….
+    
+    <article class="apple-card p-10 flex flex-col justify-between reveal cursor-pointer article-item
+      "
+      id="post-10"
+      onclick="window.location.href='/2025/01/18/%E4%B8%80%E8%BD%AE%E5%A4%8D%E4%B9%A0/'"
+      data-category=""
+      data-sticky="">
+      <div>
+        <span class="text-[#86868b] text-xs font-semibold uppercase tracking-widest">
+          文章
+        </span>
+        <h3 class="text-2xl md:text-3xl font-bold mt-4 mb-4 leading-tight tracking-tight">一轮复习</h3>
+        <p class="text-[#1d1d1f]/70 text-[15px] leading-relaxed">​     凌晨四点零五分​     今天是十月的最后一天 距离一轮复习时间结束还有30天 按照原计划今天也是高数一轮的最后一天 不过我提前七天完成了 我打算提前进入二轮复习 把C语言数据结构揉杂在二...</p>
+      </div>
+      <div class="mt-8 flex justify-between items-end">
+        <span class="text-[#86868b] text-xs font-medium">01月18日</span>
+        <span class="bg-gray-100 text-gray-600 w-8 h-8 rounded-full flex items-center justify-center font-bold text-lg">&#8599;</span>
+      </div>
+    </article>
+    
+    <article class="apple-card p-10 flex flex-col justify-between reveal cursor-pointer article-item
+      "
+      id="post-11"
+      onclick="window.location.href='/2025/01/18/Voice%20of%20April/'"
+      data-category=""
+      data-sticky="">
+      <div>
+        <span class="text-[#86868b] text-xs font-semibold uppercase tracking-widest">
+          文章
+        </span>
+        <h3 class="text-2xl md:text-3xl font-bold mt-4 mb-4 leading-tight tracking-tight">Voice of April</h3>
+        <p class="text-[#1d1d1f]/70 text-[15px] leading-relaxed">Voice of Apri这是一个简单的下午 我身边的一切都正常 舍友在打麻将 我在摸鱼 等待着三天后的二十岁生日 
+一切都是那么他妈的岁月静好 把视野放大到全球 国际事件对我来说就像电影一样过程无论...</p>
+      </div>
+      <div class="mt-8 flex justify-between items-end">
+        <span class="text-[#86868b] text-xs font-medium">01月18日</span>
+        <span class="bg-gray-100 text-gray-600 w-8 h-8 rounded-full flex items-center justify-center font-bold text-lg">&#8599;</span>
+      </div>
+    </article>
+    
+    <article class="apple-card p-10 flex flex-col justify-between reveal cursor-pointer article-item
+      "
+      id="post-12"
+      onclick="window.location.href='/2025/01/18/hello-world/'"
+      data-category=""
+      data-sticky="">
+      <div>
+        <span class="text-[#86868b] text-xs font-semibold uppercase tracking-widest">
+          文章
+        </span>
+        <h3 class="text-2xl md:text-3xl font-bold mt-4 mb-4 leading-tight tracking-tight">Hello World</h3>
+        <p class="text-[#1d1d1f]/70 text-[15px] leading-relaxed">Welcome to Hexo! This is your very first post. Check documentation for more info. If you get any pro...</p>
+      </div>
+      <div class="mt-8 flex justify-between items-end">
+        <span class="text-[#86868b] text-xs font-medium">01月18日</span>
+        <span class="bg-gray-100 text-gray-600 w-8 h-8 rounded-full flex items-center justify-center font-bold text-lg">&#8599;</span>
+      </div>
+    </article>
+    
+    <article class="apple-card p-10 flex flex-col justify-between reveal cursor-pointer article-item
+      "
+      id="post-13"
+      onclick="window.location.href='/2025/01/18/Git%20Birthday%20for%202025/'"
+      data-category=""
+      data-sticky="">
+      <div>
+        <span class="text-[#86868b] text-xs font-semibold uppercase tracking-widest">
+          文章
+        </span>
+        <h3 class="text-2xl md:text-3xl font-bold mt-4 mb-4 leading-tight tracking-tight">Git birthday for 2024</h3>
+        <p class="text-[#1d1d1f]/70 text-[15px] leading-relaxed">又是一年，掰指头数数现在已经是第四年的结尾了，这是我往个人日历里面插入的第一个纪念日，用来纪念我入行的那天。
+Git birthday，笑死，现在在程序猿这条路上渐行渐远了。
+建立博客的初衷是想分享技...</p>
+      </div>
+      <div class="mt-8 flex justify-between items-end">
+        <span class="text-[#86868b] text-xs font-medium">01月18日</span>
+        <span class="bg-gray-100 text-gray-600 w-8 h-8 rounded-full flex items-center justify-center font-bold text-lg">&#8599;</span>
+      </div>
+    </article>
+    
+    <article class="apple-card p-10 flex flex-col justify-between reveal cursor-pointer article-item
+      "
+      id="post-14"
+      onclick="window.location.href='/2025/01/18/Cyberpunk%20Edgerunners/'"
+      data-category=""
+      data-sticky="">
+      <div>
+        <span class="text-[#86868b] text-xs font-semibold uppercase tracking-widest">
+          文章
+        </span>
+        <h3 class="text-2xl md:text-3xl font-bold mt-4 mb-4 leading-tight tracking-tight">Cyberpunk Edgerunners</h3>
+        <p class="text-[#1d1d1f]/70 text-[15px] leading-relaxed">Cyberpunk Edgerunners​    这是我看完后后劲最大的一部动画 不过我更愿意称之为作品 我也没有想到一部游戏的衍生动画能做到如此程度 有过完整游戏流程的我深深的把自己代入到这个赛博...</p>
+      </div>
+      <div class="mt-8 flex justify-between items-end">
+        <span class="text-[#86868b] text-xs font-medium">01月18日</span>
+        <span class="bg-gray-100 text-gray-600 w-8 h-8 rounded-full flex items-center justify-center font-bold text-lg">&#8599;</span>
+      </div>
+    </article>
+    
+    <article class="apple-card p-10 flex flex-col justify-between reveal cursor-pointer article-item
+      "
+      id="post-15"
+      onclick="window.location.href='/2025/01/17/%E8%80%83%E7%A0%94/'"
+      data-category=""
+      data-sticky="">
+      <div>
+        <span class="text-[#86868b] text-xs font-semibold uppercase tracking-widest">
+          文章
+        </span>
+        <h3 class="text-2xl md:text-3xl font-bold mt-4 mb-4 leading-tight tracking-tight">考研</h3>
+        <p class="text-[#1d1d1f]/70 text-[15px] leading-relaxed">考研序这个项目在今年所占比重过大，实施过程对自我成长照成了十分恶劣的影响，若不去深究原因，可能会对未来产生无法预测的后果。情绪稳定下来后，我将这次任务的结果定性为失败，由于这次任务所暴露出来多个严重问...</p>
+      </div>
+      <div class="mt-8 flex justify-between items-end">
+        <span class="text-[#86868b] text-xs font-medium">01月17日</span>
+        <span class="bg-gray-100 text-gray-600 w-8 h-8 rounded-full flex items-center justify-center font-bold text-lg">&#8599;</span>
+      </div>
+    </article>
+    
+    <article class="apple-card p-10 flex flex-col justify-between reveal cursor-pointer article-item
+      "
+      id="post-16"
+      onclick="window.location.href='/2025/01/10/2024%E5%B9%B4%E5%BA%A6%E6%80%BB%E7%BB%93/'"
+      data-category=""
+      data-sticky="">
+      <div>
+        <span class="text-[#86868b] text-xs font-semibold uppercase tracking-widest">
+          文章
+        </span>
+        <h3 class="text-2xl md:text-3xl font-bold mt-4 mb-4 leading-tight tracking-tight">2024年度总结</h3>
+        <p class="text-[#1d1d1f]/70 text-[15px] leading-relaxed">2024年度总结序现在是2024年十一月四号，一个奉行“活在当下”的利己主义者，想给今年按下快进键。
+现在是十二月三十号，我在书房坐着，两年前的这个时候我也坐在这个位置上进行插本的备考。对我来说，一年...</p>
+      </div>
+      <div class="mt-8 flex justify-between items-end">
+        <span class="text-[#86868b] text-xs font-medium">01月10日</span>
+        <span class="bg-gray-100 text-gray-600 w-8 h-8 rounded-full flex items-center justify-center font-bold text-lg">&#8599;</span>
+      </div>
+    </article>
+    
+    <article class="apple-card p-10 flex flex-col justify-between reveal cursor-pointer article-item
+      "
+      id="post-17"
+      onclick="window.location.href='/2024/12/05/%E6%AF%95%E4%B8%9A%E9%9A%8F%E7%AC%94/'"
+      data-category=""
+      data-sticky="">
+      <div>
+        <span class="text-[#86868b] text-xs font-semibold uppercase tracking-widest">
+          文章
+        </span>
+        <h3 class="text-2xl md:text-3xl font-bold mt-4 mb-4 leading-tight tracking-tight">毕业照</h3>
+        <p class="text-[#1d1d1f]/70 text-[15px] leading-relaxed">
+人们无法同时拥有青春和对青春的感受。那是我们回不去的青春。往前看，别回头。心脏突然少跳了一下，正好补上了初次相见的心动。(少不了的爱情元素)欲买桂花同载酒，终不似，少年游。(来点名言名句)夏天还会来...</p>
+      </div>
+      <div class="mt-8 flex justify-between items-end">
+        <span class="text-[#86868b] text-xs font-medium">12月05日</span>
+        <span class="bg-gray-100 text-gray-600 w-8 h-8 rounded-full flex items-center justify-center font-bold text-lg">&#8599;</span>
+      </div>
+    </article>
+    
+    <article class="apple-card p-10 flex flex-col justify-between reveal cursor-pointer article-item
+      "
+      id="post-18"
+      onclick="window.location.href='/2024/04/26/%E7%94%9F%E6%97%A5%E5%BF%AB%E4%B9%90/'"
+      data-category=""
+      data-sticky="">
+      <div>
+        <span class="text-[#86868b] text-xs font-semibold uppercase tracking-widest">
+          文章
+        </span>
+        <h3 class="text-2xl md:text-3xl font-bold mt-4 mb-4 leading-tight tracking-tight">生日快乐</h3>
+        <p class="text-[#1d1d1f]/70 text-[15px] leading-relaxed">生日快乐​        晃晃悠悠居然过了一年了 被琐事缠身 代码和吐槽都少了很多 我现在过的很憋屈 这种精神折磨我从未受到过 我宁愿现在飞去上海吃上一整年的生煎和本帮菜 甚至脏话我都不再愿意再去讲 ...</p>
+      </div>
+      <div class="mt-8 flex justify-between items-end">
+        <span class="text-[#86868b] text-xs font-medium">04月26日</span>
+        <span class="bg-gray-100 text-gray-600 w-8 h-8 rounded-full flex items-center justify-center font-bold text-lg">&#8599;</span>
+      </div>
+    </article>
+    
+    <article class="apple-card p-10 flex flex-col justify-between reveal cursor-pointer article-item
+      "
+      id="post-19"
+      onclick="window.location.href='/2023/12/12/2023%E5%B9%B4%E5%BA%A6%E6%80%BB%E7%BB%93/'"
+      data-category=""
+      data-sticky="">
+      <div>
+        <span class="text-[#86868b] text-xs font-semibold uppercase tracking-widest">
+          文章
+        </span>
+        <h3 class="text-2xl md:text-3xl font-bold mt-4 mb-4 leading-tight tracking-tight">2023年度总结</h3>
+        <p class="text-[#1d1d1f]/70 text-[15px] leading-relaxed">年度总结序
+​                    十年胜负无算，今朝仍在朝堂。 看尽风云变幻，旧敌已然还乡。 新科又有高中，待我看他斤两。 满座皆是偏才，无人接我衣裳。
 
-[
-          </div>
-        </div>
-        <div class="post-more">
-          <a href="/2024/12/05/%E6%AF%95%E4%B8%9A%E9%9A%8F%E7%AC%94/">
-            <i class="iconfont iconmore" style="" title="阅读更多"></i>
-          </a>
-        </div>
+这段话摘自抗吧某吧友于F...</p>
       </div>
-      <div class="post-img">
-        
-          <a href="/2024/12/05/%E6%AF%95%E4%B8%9A%E9%9A%8F%E7%AC%94/" class="lazyload" data-original="/medias/11.jpg" style="background-size: cover; 
-            background-position: center center;">
-          </a>
-        
+      <div class="mt-8 flex justify-between items-end">
+        <span class="text-[#86868b] text-xs font-medium">12月12日</span>
+        <span class="bg-gray-100 text-gray-600 w-8 h-8 rounded-full flex items-center justify-center font-bold text-lg">&#8599;</span>
       </div>
     </article>
-  
+    
+    <article class="apple-card p-10 flex flex-col justify-between reveal cursor-pointer article-item
+      "
+      id="post-20"
+      onclick="window.location.href='/2023/11/23/Git%20Birthday2023/'"
+      data-category=""
+      data-sticky="">
+      <div>
+        <span class="text-[#86868b] text-xs font-semibold uppercase tracking-widest">
+          文章
+        </span>
+        <h3 class="text-2xl md:text-3xl font-bold mt-4 mb-4 leading-tight tracking-tight">Git Birthday</h3>
+        <p class="text-[#1d1d1f]/70 text-[15px] leading-relaxed">生日快乐！
+​    今天是git生日 不知不觉过了三年了 现在我也爬到了本科的阶段 实习之后 编辑代码的时间明显下降了很多 开始变成如何构思了  加上转入这个大数据专业 就越来越理解：不管pytho...</p>
+      </div>
+      <div class="mt-8 flex justify-between items-end">
+        <span class="text-[#86868b] text-xs font-medium">11月23日</span>
+        <span class="bg-gray-100 text-gray-600 w-8 h-8 rounded-full flex items-center justify-center font-bold text-lg">&#8599;</span>
+      </div>
+    </article>
+    
+    <article class="apple-card p-10 flex flex-col justify-between reveal cursor-pointer article-item
+      "
+      id="post-21"
+      onclick="window.location.href='/2023/10/26/%E6%97%A0%E9%A2%98/'"
+      data-category=""
+      data-sticky="">
+      <div>
+        <span class="text-[#86868b] text-xs font-semibold uppercase tracking-widest">
+          文章
+        </span>
+        <h3 class="text-2xl md:text-3xl font-bold mt-4 mb-4 leading-tight tracking-tight">重启</h3>
+        <p class="text-[#1d1d1f]/70 text-[15px] leading-relaxed">重启
+如图所示 我于2023年十月24号拿到了这张全日制本科学生证 
+虽然发证的时候我还在校园里乱逛 拍点我所认为的认为的人文风光
+中午吃饭的时候拿着这张证看了蛮久 跟朋友们调侃数据库老师教的啥也不是...</p>
+      </div>
+      <div class="mt-8 flex justify-between items-end">
+        <span class="text-[#86868b] text-xs font-medium">10月26日</span>
+        <span class="bg-gray-100 text-gray-600 w-8 h-8 rounded-full flex items-center justify-center font-bold text-lg">&#8599;</span>
+      </div>
+    </article>
+    
+    <article class="apple-card p-10 flex flex-col justify-between reveal cursor-pointer article-item
+      "
+      id="post-22"
+      onclick="window.location.href='/2023/09/06/%E4%B8%8A%E6%B5%B7%E6%B8%B8%E8%AE%B0/'"
+      data-category=""
+      data-sticky="">
+      <div>
+        <span class="text-[#86868b] text-xs font-semibold uppercase tracking-widest">
+          文章
+        </span>
+        <h3 class="text-2xl md:text-3xl font-bold mt-4 mb-4 leading-tight tracking-tight">上海游记</h3>
+        <p class="text-[#1d1d1f]/70 text-[15px] leading-relaxed">上海游记仅以此篇 纪念我四个月的上海生活时光
+黄浦浪花千尘雪  东方明珠百度春​    早在四月份听说了要去上海的时候 我就开始了对这边的幻想 从我接触我文化作品来判断 上海仅仅是一个繁华的带点特殊文...</p>
+      </div>
+      <div class="mt-8 flex justify-between items-end">
+        <span class="text-[#86868b] text-xs font-medium">09月06日</span>
+        <span class="bg-gray-100 text-gray-600 w-8 h-8 rounded-full flex items-center justify-center font-bold text-lg">&#8599;</span>
+      </div>
+    </article>
+    
+    <article class="apple-card p-10 flex flex-col justify-between reveal cursor-pointer article-item
+      "
+      id="post-23"
+      onclick="window.location.href='/2023/07/18/7.18/'"
+      data-category=""
+      data-sticky="">
+      <div>
+        <span class="text-[#86868b] text-xs font-semibold uppercase tracking-widest">
+          文章
+        </span>
+        <h3 class="text-2xl md:text-3xl font-bold mt-4 mb-4 leading-tight tracking-tight">摸鱼日记</h3>
+        <p class="text-[#1d1d1f]/70 text-[15px] leading-relaxed">摸鱼日记
+​    7.18 晴 因为网络问题 我们又去到了板房隔壁的办公楼上班 我们分到了一间办公室 两张大桌子靠着落地窗 阳光很大 我们不得不把窗帘全部降下来 上海的夏天比广州好不了多少 从窗外远...</p>
+      </div>
+      <div class="mt-8 flex justify-between items-end">
+        <span class="text-[#86868b] text-xs font-medium">07月18日</span>
+        <span class="bg-gray-100 text-gray-600 w-8 h-8 rounded-full flex items-center justify-center font-bold text-lg">&#8599;</span>
+      </div>
+    </article>
+    
+    <article class="apple-card p-10 flex flex-col justify-between reveal cursor-pointer article-item
+      "
+      id="post-24"
+      onclick="window.location.href='/2023/07/16/%E4%BA%BA%E7%94%9F%E9%87%8D%E5%90%AF%E8%AE%A1%E5%88%92/'"
+      data-category=""
+      data-sticky="">
+      <div>
+        <span class="text-[#86868b] text-xs font-semibold uppercase tracking-widest">
+          文章
+        </span>
+        <h3 class="text-2xl md:text-3xl font-bold mt-4 mb-4 leading-tight tracking-tight">人生重启计划</h3>
+        <p class="text-[#1d1d1f]/70 text-[15px] leading-relaxed">人生重启计划二零二三年 七月十六日 早上十点 我收到了插本的全日制本科录取通知书
+ 一晚没睡 接到邮政电话的那之后 我打开相机开始记录这一次意义特殊的快递签收 我小跑下楼 开门 按照要求填上姓名身份证...</p>
+      </div>
+      <div class="mt-8 flex justify-between items-end">
+        <span class="text-[#86868b] text-xs font-medium">07月16日</span>
+        <span class="bg-gray-100 text-gray-600 w-8 h-8 rounded-full flex items-center justify-center font-bold text-lg">&#8599;</span>
+      </div>
+    </article>
+    
+    <article class="apple-card p-10 flex flex-col justify-between reveal cursor-pointer article-item
+      "
+      id="post-25"
+      onclick="window.location.href='/2023/07/01/%E6%AF%95%E4%B8%9A/'"
+      data-category=""
+      data-sticky="">
+      <div>
+        <span class="text-[#86868b] text-xs font-semibold uppercase tracking-widest">
+          文章
+        </span>
+        <h3 class="text-2xl md:text-3xl font-bold mt-4 mb-4 leading-tight tracking-tight">毕业</h3>
+        <p class="text-[#1d1d1f]/70 text-[15px] leading-relaxed">毕业咯！
+说实话 年纪大了泪点低 
+我在好好的跟他们做最后的告别 给这三年画上一个完美的句号
+我爱我的团员 我爱我的社团 我爱小飞哥 我爱学委和我的舍友 你们可能看不见或者没机会见到我 因为舍不得离开...</p>
+      </div>
+      <div class="mt-8 flex justify-between items-end">
+        <span class="text-[#86868b] text-xs font-medium">07月01日</span>
+        <span class="bg-gray-100 text-gray-600 w-8 h-8 rounded-full flex items-center justify-center font-bold text-lg">&#8599;</span>
+      </div>
+    </article>
+    
+    <article class="apple-card p-10 flex flex-col justify-between reveal cursor-pointer article-item
+      "
+      id="post-26"
+      onclick="window.location.href='/2023/04/06/4.26/'"
+      data-category=""
+      data-sticky="">
+      <div>
+        <span class="text-[#86868b] text-xs font-semibold uppercase tracking-widest">
+          文章
+        </span>
+        <h3 class="text-2xl md:text-3xl font-bold mt-4 mb-4 leading-tight tracking-tight">四月二十六</h3>
+        <p class="text-[#1d1d1f]/70 text-[15px] leading-relaxed">t
+今天是我的二十一岁生日 昨天拿了一个深圳的offer 虽然是老师推荐 但是在今年这个计算机行业水深火热毕业只能选真功夫必胜客的年代 我还算不错了
+ 工作那边 可能跟团去上海做项目 这算是我送给自己...</p>
+      </div>
+      <div class="mt-8 flex justify-between items-end">
+        <span class="text-[#86868b] text-xs font-medium">04月06日</span>
+        <span class="bg-gray-100 text-gray-600 w-8 h-8 rounded-full flex items-center justify-center font-bold text-lg">&#8599;</span>
+      </div>
+    </article>
+    
+    <article class="apple-card p-10 flex flex-col justify-between reveal cursor-pointer article-item
+      "
+      id="post-27"
+      onclick="window.location.href='/2023/01/03/McDonald&#39;s/'"
+      data-category=""
+      data-sticky="">
+      <div>
+        <span class="text-[#86868b] text-xs font-semibold uppercase tracking-widest">
+          文章
+        </span>
+        <h3 class="text-2xl md:text-3xl font-bold mt-4 mb-4 leading-tight tracking-tight">M记风云</h3>
+        <p class="text-[#1d1d1f]/70 text-[15px] leading-relaxed">由麦当劳涨价引发的小思考​    年过三天 麦当劳一加一也涨价了 趁着涨价前 我最后一次点了双吉加香芋派 ，但令我觉得不安的是 其他所有东西都涨价了 是所有，我以为是年前的溢价 但老妈说并不是 只是单...</p>
+      </div>
+      <div class="mt-8 flex justify-between items-end">
+        <span class="text-[#86868b] text-xs font-medium">01月03日</span>
+        <span class="bg-gray-100 text-gray-600 w-8 h-8 rounded-full flex items-center justify-center font-bold text-lg">&#8599;</span>
+      </div>
+    </article>
+    
+    <article class="apple-card p-10 flex flex-col justify-between reveal cursor-pointer article-item
+      "
+      id="post-28"
+      onclick="window.location.href='/2023/01/02/%E6%97%A5%E8%AE%B0/'"
+      data-category=""
+      data-sticky="">
+      <div>
+        <span class="text-[#86868b] text-xs font-semibold uppercase tracking-widest">
+          文章
+        </span>
+        <h3 class="text-2xl md:text-3xl font-bold mt-4 mb-4 leading-tight tracking-tight">日记</h3>
+        <p class="text-[#1d1d1f]/70 text-[15px] leading-relaxed">12月20号在家睡觉
+12月21号睡觉
+12月22号睡觉
+12月23号睡觉
+12月24号睡觉
+12月25号睡觉
+……1月1号金辉啊金辉 你怎么堕落成这个样子！  你忘了你的计划了吗 子曰：“吾日三省吾...</p>
+      </div>
+      <div class="mt-8 flex justify-between items-end">
+        <span class="text-[#86868b] text-xs font-medium">01月02日</span>
+        <span class="bg-gray-100 text-gray-600 w-8 h-8 rounded-full flex items-center justify-center font-bold text-lg">&#8599;</span>
+      </div>
+    </article>
+    
+    <article class="apple-card p-10 flex flex-col justify-between reveal cursor-pointer article-item
+      "
+      id="post-29"
+      onclick="window.location.href='/2022/12/26/2022%E5%B9%B4%E5%BA%A6%E6%80%BB%E7%BB%93/'"
+      data-category=""
+      data-sticky="">
+      <div>
+        <span class="text-[#86868b] text-xs font-semibold uppercase tracking-widest">
+          文章
+        </span>
+        <h3 class="text-2xl md:text-3xl font-bold mt-4 mb-4 leading-tight tracking-tight">2022年度总结</h3>
+        <p class="text-[#1d1d1f]/70 text-[15px] leading-relaxed">2022年度总结序又又又又又又是一年的年度总结 今年过的怎么说呢 安逸(摆烂)   但是但是但是！也是干了很多正事滴！(你最好是)至于为什么提前写这玩意 绝对不是因为我无聊 并且有很多事情没做索性全部...</p>
+      </div>
+      <div class="mt-8 flex justify-between items-end">
+        <span class="text-[#86868b] text-xs font-medium">12月26日</span>
+        <span class="bg-gray-100 text-gray-600 w-8 h-8 rounded-full flex items-center justify-center font-bold text-lg">&#8599;</span>
+      </div>
+    </article>
+    
+    <article class="apple-card p-10 flex flex-col justify-between reveal cursor-pointer article-item
+      "
+      id="post-30"
+      onclick="window.location.href='/2022/11/28/%E4%BA%8C%E8%BD%AE/'"
+      data-category=""
+      data-sticky="">
+      <div>
+        <span class="text-[#86868b] text-xs font-semibold uppercase tracking-widest">
+          文章
+        </span>
+        <h3 class="text-2xl md:text-3xl font-bold mt-4 mb-4 leading-tight tracking-tight">二轮复习</h3>
+        <p class="text-[#1d1d1f]/70 text-[15px] leading-relaxed">二十六号 1+X证书的考试已经结束 考试已经凉了 但是得知消息说十二月十号提前放假的时候 我也意识到我的大专生活将迎来尾声 说对同学舍友没有感情是假的 尽管有些时候他们真的该骂。我知道除了喜酒以后没有...</p>
+      </div>
+      <div class="mt-8 flex justify-between items-end">
+        <span class="text-[#86868b] text-xs font-medium">11月28日</span>
+        <span class="bg-gray-100 text-gray-600 w-8 h-8 rounded-full flex items-center justify-center font-bold text-lg">&#8599;</span>
+      </div>
+    </article>
+    
+    <article class="apple-card p-10 flex flex-col justify-between reveal cursor-pointer article-item
+      "
+      id="post-31"
+      onclick="window.location.href='/2022/11/23/Git%20Birthday/'"
+      data-category=""
+      data-sticky="">
+      <div>
+        <span class="text-[#86868b] text-xs font-semibold uppercase tracking-widest">
+          文章
+        </span>
+        <h3 class="text-2xl md:text-3xl font-bold mt-4 mb-4 leading-tight tracking-tight">Git Birthday</h3>
+        <p class="text-[#1d1d1f]/70 text-[15px] leading-relaxed"> 今天是Git Birthday 
+​    两年前的今天我注册git账号并且正式开始了我的代码生涯 周六我要进行前端的某个不知名小证书的考试赶上世界杯 阿根廷爆冷 九点到凌晨三点没进一个球 远离赌球...</p>
+      </div>
+      <div class="mt-8 flex justify-between items-end">
+        <span class="text-[#86868b] text-xs font-medium">11月23日</span>
+        <span class="bg-gray-100 text-gray-600 w-8 h-8 rounded-full flex items-center justify-center font-bold text-lg">&#8599;</span>
+      </div>
+    </article>
+    
+    <article class="apple-card p-10 flex flex-col justify-between reveal cursor-pointer article-item
+      "
+      id="post-32"
+      onclick="window.location.href='/2022/11/18/4.26%20AM/'"
+      data-category=""
+      data-sticky="">
+      <div>
+        <span class="text-[#86868b] text-xs font-semibold uppercase tracking-widest">
+          文章
+        </span>
+        <h3 class="text-2xl md:text-3xl font-bold mt-4 mb-4 leading-tight tracking-tight">4.26 AM</h3>
+        <p class="text-[#1d1d1f]/70 text-[15px] leading-relaxed"> 如果我50岁之前挂了 跟大专这班人绝对脱不了关系。
+​    我一直以为在我国这样的宣传力度下 黄赌毒所带来的后果在年轻人中间已经耳熟能详了 但在赌这个方面 仿佛有一种奇特的吸引力去吸引着他们 我以...</p>
+      </div>
+      <div class="mt-8 flex justify-between items-end">
+        <span class="text-[#86868b] text-xs font-medium">11月18日</span>
+        <span class="bg-gray-100 text-gray-600 w-8 h-8 rounded-full flex items-center justify-center font-bold text-lg">&#8599;</span>
+      </div>
+    </article>
+    
+    <article class="apple-card p-10 flex flex-col justify-between reveal cursor-pointer article-item
+      "
+      id="post-33"
+      onclick="window.location.href='/2022/11/15/11/'"
+      data-category=""
+      data-sticky="">
+      <div>
+        <span class="text-[#86868b] text-xs font-semibold uppercase tracking-widest">
+          文章
+        </span>
+        <h3 class="text-2xl md:text-3xl font-bold mt-4 mb-4 leading-tight tracking-tight">十一月十三日</h3>
+        <p class="text-[#1d1d1f]/70 text-[15px] leading-relaxed">本该于标题所示时间完成的事情拖到了现在  在这个没课的午后 记录下一些快要被遗忘的事情
+
+今天是十一月十三日 广东的天气 越来越让人捉摸不透了 今天吴锐伟从外面回来了 看得出他去培训后还是比较向往校园...</p>
+      </div>
+      <div class="mt-8 flex justify-between items-end">
+        <span class="text-[#86868b] text-xs font-medium">11月15日</span>
+        <span class="bg-gray-100 text-gray-600 w-8 h-8 rounded-full flex items-center justify-center font-bold text-lg">&#8599;</span>
+      </div>
+    </article>
+    
+    <article class="apple-card p-10 flex flex-col justify-between reveal cursor-pointer article-item
+      "
+      id="post-34"
+      onclick="window.location.href='/2022/03/25/%E6%9C%89%E6%84%9F%E8%80%8C%E5%8F%91/'"
+      data-category=""
+      data-sticky="">
+      <div>
+        <span class="text-[#86868b] text-xs font-semibold uppercase tracking-widest">
+          文章
+        </span>
+        <h3 class="text-2xl md:text-3xl font-bold mt-4 mb-4 leading-tight tracking-tight">随手</h3>
+        <p class="text-[#1d1d1f]/70 text-[15px] leading-relaxed">随手这只是一些突然之间想要写出来的东西
+​    广东的回南天一如既往的来了 人啊 树啊 猫啊都’湿焦焦的’ 四周的一切也随之变得慵懒起来 
+​    因为疫情原因 我被困在了离家不到200km的地方...</p>
+      </div>
+      <div class="mt-8 flex justify-between items-end">
+        <span class="text-[#86868b] text-xs font-medium">03月25日</span>
+        <span class="bg-gray-100 text-gray-600 w-8 h-8 rounded-full flex items-center justify-center font-bold text-lg">&#8599;</span>
+      </div>
+    </article>
+    
+    <article class="apple-card p-10 flex flex-col justify-between reveal cursor-pointer article-item
+      "
+      id="post-35"
+      onclick="window.location.href='/2022/01/17/2021%E5%AD%A6%E6%9C%9F%E6%80%BB%E7%BB%93/'"
+      data-category=""
+      data-sticky="">
+      <div>
+        <span class="text-[#86868b] text-xs font-semibold uppercase tracking-widest">
+          文章
+        </span>
+        <h3 class="text-2xl md:text-3xl font-bold mt-4 mb-4 leading-tight tracking-tight">2021年度总结</h3>
+        <p class="text-[#1d1d1f]/70 text-[15px] leading-relaxed">2021年度总结现在是2022年一月十四日下午一点四十六分 21年的一切也终于尘埃落定 我也终于有时间去完成一些去年未完成的任务 
+现在，让思绪飞回那个如梦如幻的2021吧
+
+如果用一个词来形容202...</p>
+      </div>
+      <div class="mt-8 flex justify-between items-end">
+        <span class="text-[#86868b] text-xs font-medium">01月17日</span>
+        <span class="bg-gray-100 text-gray-600 w-8 h-8 rounded-full flex items-center justify-center font-bold text-lg">&#8599;</span>
+      </div>
+    </article>
+    
+    <article class="apple-card p-10 flex flex-col justify-between reveal cursor-pointer article-item
+      "
+      id="post-36"
+      onclick="window.location.href='/2021/12/09/%E7%90%86%E5%B7%A5%E8%B6%B3%E7%90%83%E9%98%9F/'"
+      data-category=""
+      data-sticky="">
+      <div>
+        <span class="text-[#86868b] text-xs font-semibold uppercase tracking-widest">
+          文章
+        </span>
+        <h3 class="text-2xl md:text-3xl font-bold mt-4 mb-4 leading-tight tracking-tight">理工足球队</h3>
+        <p class="text-[#1d1d1f]/70 text-[15px] leading-relaxed">题外话 ：我突然想起我还有个博客
+To:广东理工职业学院跟我一起奋战过拼搏过的兄弟们
+随着裁判一声哨响 2021广东省省长杯青少年校园足球赛宣告结束 我的足球生涯也画上了完整但是不太完美的句号 就像高...</p>
+      </div>
+      <div class="mt-8 flex justify-between items-end">
+        <span class="text-[#86868b] text-xs font-medium">12月09日</span>
+        <span class="bg-gray-100 text-gray-600 w-8 h-8 rounded-full flex items-center justify-center font-bold text-lg">&#8599;</span>
+      </div>
+    </article>
+    
+    <article class="apple-card p-10 flex flex-col justify-between reveal cursor-pointer article-item
+      "
+      id="post-37"
+      onclick="window.location.href='/2020/12/10/%E8%B5%9B%E5%8D%9A%E6%9C%8B%E5%85%8B2077/'"
+      data-category=""
+      data-sticky="">
+      <div>
+        <span class="text-[#86868b] text-xs font-semibold uppercase tracking-widest">
+          文章
+        </span>
+        <h3 class="text-2xl md:text-3xl font-bold mt-4 mb-4 leading-tight tracking-tight">赛博朋克2077</h3>
+        <p class="text-[#1d1d1f]/70 text-[15px] leading-relaxed">今天是2020.12.1
+
+今天赛博朋克出来了 我玩去了 让我们将夜之城燃烧殆尽吧！！！！！
+...</p>
+      </div>
+      <div class="mt-8 flex justify-between items-end">
+        <span class="text-[#86868b] text-xs font-medium">12月10日</span>
+        <span class="bg-gray-100 text-gray-600 w-8 h-8 rounded-full flex items-center justify-center font-bold text-lg">&#8599;</span>
+      </div>
+    </article>
+    
+    <article class="apple-card p-10 flex flex-col justify-between reveal cursor-pointer article-item
+      "
+      id="post-38"
+      onclick="window.location.href='/2020/12/07/%E6%B0%B4/'"
+      data-category=""
+      data-sticky="">
+      <div>
+        <span class="text-[#86868b] text-xs font-semibold uppercase tracking-widest">
+          文章
+        </span>
+        <h3 class="text-2xl md:text-3xl font-bold mt-4 mb-4 leading-tight tracking-tight">水</h3>
+        <p class="text-[#1d1d1f]/70 text-[15px] leading-relaxed">今天是2020.12.7
+
+咕咕咕咕咕咕咕咕咕咕咕咕咕咕咕咕咕咕咕咕咕咕咕咕咕咕咕咕咕咕咕咕咕咕咕咕咕咕咕咕咕咕咕咕咕咕咕咕咕咕咕咕咕咕咕咕咕咕咕咕咕咕咕咕咕咕咕咕咕咕咕咕咕咕咕咕咕咕咕咕咕咕咕咕咕咕...</p>
+      </div>
+      <div class="mt-8 flex justify-between items-end">
+        <span class="text-[#86868b] text-xs font-medium">12月07日</span>
+        <span class="bg-gray-100 text-gray-600 w-8 h-8 rounded-full flex items-center justify-center font-bold text-lg">&#8599;</span>
+      </div>
+    </article>
+    
+    <article class="apple-card p-10 flex flex-col justify-between reveal cursor-pointer article-item
+      "
+      id="post-39"
+      onclick="window.location.href='/2020/11/30/%E4%B9%B1%E4%B8%83%E5%85%AB%E7%B3%9F/'"
+      data-category=""
+      data-sticky="">
+      <div>
+        <span class="text-[#86868b] text-xs font-semibold uppercase tracking-widest">
+          文章
+        </span>
+        <h3 class="text-2xl md:text-3xl font-bold mt-4 mb-4 leading-tight tracking-tight">圆玄之歌</h3>
+        <p class="text-[#1d1d1f]/70 text-[15px] leading-relaxed">清清巴江河畔微微崖山脚下圆中美丽校园照耀灿烂阳光
+123456789#include &amp;lt;stdio.h&amp;gt;int main ()&amp;#123;	float f,c;	f=64.0;	c=(5....</p>
+      </div>
+      <div class="mt-8 flex justify-between items-end">
+        <span class="text-[#86868b] text-xs font-medium">11月30日</span>
+        <span class="bg-gray-100 text-gray-600 w-8 h-8 rounded-full flex items-center justify-center font-bold text-lg">&#8599;</span>
+      </div>
+    </article>
+    
+    <article class="apple-card p-10 flex flex-col justify-between reveal cursor-pointer article-item
+      "
+      id="post-40"
+      onclick="window.location.href='/2020/11/30/%E7%AC%AC%E4%B8%80%E7%AF%87%E5%8D%9A%E5%AE%A2/'"
+      data-category=""
+      data-sticky="">
+      <div>
+        <span class="text-[#86868b] text-xs font-semibold uppercase tracking-widest">
+          文章
+        </span>
+        <h3 class="text-2xl md:text-3xl font-bold mt-4 mb-4 leading-tight tracking-tight">第一篇博客</h3>
+        <p class="text-[#1d1d1f]/70 text-[15px] leading-relaxed">说到底你还是条懒狗
+
+sa=dsadsa
+dsajjjsb
+sss
+sss
+
+dsa
+1.ssdada2.ss
+
+fdsfdsfds
+
+
+ss
+
+
+aaaa a
+
+
+🌱
+
+...</p>
+      </div>
+      <div class="mt-8 flex justify-between items-end">
+        <span class="text-[#86868b] text-xs font-medium">11月30日</span>
+        <span class="bg-gray-100 text-gray-600 w-8 h-8 rounded-full flex items-center justify-center font-bold text-lg">&#8599;</span>
+      </div>
+    </article>
+    
+  </div>
+
+  <!-- 翻页容器（JS 动态生成） -->
+  <nav id="paginator-container" class="mt-12 flex justify-center items-center gap-2 text-sm"></nav>
 </section>
 
-  <nav class="page-nav">
-    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><span class="space">&hellip;</span><a class="page-number" href="/page/5/">5</a><a class="extend next" rel="next" href="/page/2/">下一页</a>
-  </nav>
+<!-- 数据统计 -->
 
+<section id="stats" class="py-32 px-6 bg-[#ffffff] border-t border-[#e8e8ed]/50">
+  <div class="max-w-5xl mx-auto">
+    <div class="flex flex-col md:flex-row items-center gap-16 md:gap-24">
+      <div class="w-full md:w-1/2 reveal">
+        <h2 class="text-4xl md:text-5xl font-bold tracking-tight mb-6 leading-tight">持续输出，<br>构建知识图谱。</h2>
+        <p class="text-[#86868b] text-[17px] leading-relaxed mb-10">
+          清晰展现技术焦点的演进路径。底层架构与前沿设计的融合，始终是我探索的核心方向。
+        </p>
+        <div class="space-y-6">
+          <div class="flex items-center justify-between border-b border-[#f5f5f7] pb-6">
+            <span class="font-semibold text-[#1d1d1f] text-lg">累计发布文章</span>
+            <span class="text-3xl font-bold tracking-tighter">41 <span class="text-lg text-[#86868b] font-medium">篇</span></span>
+          </div>
+          <div class="flex items-center justify-between border-b border-[#f5f5f7] pb-6">
+            <span class="font-semibold text-[#1d1d1f] text-lg">沉淀代码与文字</span>
+            <span class="text-3xl font-bold tracking-tighter">12.5万</span>
+          </div>
+        </div>
+      </div>
 
-<!-- 雪花和花瓣特效 -->
-
-  
-    <script src="/js/snow.js"></script>
-  
-
-
-  
-    </main>
-    <div class="footer bg-color">
-  <div class="footer-main">
-    <div class="link">
-      <a target="_blank" rel="noopener" href="https://github.com/yuang01/hexo-theme-bamboo">
-        <i class="fa fa-github" aria-hidden="true"></i>
-      </a>
-      <a href="mailto:1730241541@qq.com">
-        <i class="fa fa-envelope-o" aria-hidden="true"></i>
-      </a>
-      <a href="tencent://AddContact/?fromId=50&fromSubId=1&subcmd=all&uin=1730241541">
-        <i class="fa fa-qq" aria-hidden="true"></i>
-      </a>
-      <a href="/atom.xml" target="_blank">
-        <i class="fa fa-rss" aria-hidden="true"></i>
-      </a>
+      <div class="w-full md:w-1/2 reveal delay-200">
+        <div class="apple-card p-8">
+          <h3 class="text-center font-semibold text-xs mb-8 uppercase tracking-widest text-[#86868b]">内容领域分布</h3>
+          <div class="chart-container">
+            <canvas id="topicsChart"></canvas>
+          </div>
+        </div>
+      </div>
     </div>
-    <div class="footer-copyright">
-      Copyright © 2019 - 2020 <a target="_blank" rel="noopener" href="https://gitee.com/long-jinhui">Dragon</a> | Powered by <a target="_blank" rel="noopener" href="https://hexo.io/zh-cn/docs/">Hexo</a> | Theme <a target="_blank" rel="noopener" href="https://github.com/yuang01/theme">Bamboo</a> 
-    </div>
-    
-      
-  <!-- 不蒜子统计 -->
-  <span id="busuanzi_container_site_pv">
-        <i class="fa fa-book" aria-hidden="true"></i>本站总阅读量：<span id="busuanzi_value_page_pv"></span> 次
-  </span>
-  <span id="busuanzi_container_site_pv">
-        <i class="fa fa-eye" aria-hidden="true"></i>本站总访问量：<span id="busuanzi_value_site_pv"></span> 次
-  </span>
-  <span class="post-meta-divider">|</span>
-  <span id="busuanzi_container_site_uv" style='display:none'>
-        <i class="fa fa-users" aria-hidden="true"></i>本站访客数：<span id="busuanzi_value_site_uv"></span> 人
-  </span>
-  <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
-
-    
   </div>
-</div>
+</section>
 
-
-    
-      <div class="goTop bg-color">
-  <i class="fa fa-arrow-up" aria-hidden="true"></i>
-</div>
-
-<script src="/js/goTop.js"></script>
-
-    
-
-    
-      <link href="https://cdn.bootcdn.net/ajax/libs/aplayer/1.10.1/APlayer.min.css" rel="stylesheet">
-<style>
-.aplayer .aplayer-lrc p {
-  
-  display: none;
-  
-  font-size: 12px;
-  font-weight: 700;
-  line-height: 16px !important;
-}
-
-.aplayer .aplayer-lrc p.aplayer-lrc-current {
-  
-  display: none;
-  
-  font-size: 15px;
-  color: #42b983;
-}
-
-
-.aplayer.aplayer-fixed.aplayer-narrow .aplayer-body {
-  left: -66px !important;
-}
-
-.aplayer.aplayer-fixed.aplayer-narrow .aplayer-body:hover {
-  left: 0px !important;
-}
-
-
-</style>
-<meting-js  
-  class=""
-  server="netease"
-  type="playlist"
-  id="2650952087"
-  fixed='true'
-  autoplay='false'
-  theme='#42b983'
-  loop='all'
-  order='random'
-  preload='auto'
-  volume='0.7'
-  list-folded='true'
->
-</meting-js>
-
-<!-- <style>
-  #aplayer {
-    position: fixed;
-    left: 0;
-    bottom: 300px;
-  }
-</style> -->
-<script src="https://cdn.bootcdn.net/ajax/libs/aplayer/1.10.1/APlayer.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/meting@2/dist/Meting.min.js"></script>
-    
-
-    <!-- 图片放大 -->
-    
-      
-<script src="/js/fancybox/jquery.fancybox.min.js"></script>
-<script src="/js/wrapImage.js"></script>
-
-    
-
-    <!-- 爱心点击 -->
-    
-      
-<script src="/js/clicklove.js"></script>
-
-    
-
-    <!-- Baidu Analytics -->
-
-    <!-- Baidu Push -->
-
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
-    (function () {
-        var bp = document.createElement('script');
-        var curProtocol = window.location.protocol.split(':')[0];
-        if (curProtocol === 'https') {
-            bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
-        } else {
-            bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+  document.addEventListener('DOMContentLoaded', function() {
+
+    // ═══════════════ 状态 ═══════════════
+    var articles       = document.querySelectorAll('.article-item');
+    var articleArr     = Array.from(articles);
+    var paginatorEl    = document.getElementById('paginator-container');
+    var filterBtns     = document.querySelectorAll('.filter-btn');
+    var currentFilter  = 'all';
+    var currentPage    = 1;
+    var perPage        = 9;
+    var totalItems     = articleArr.length;
+
+    // ═══════════════ 随机卡片尺寸（仅执行一次） ═══════════════
+    (function() {
+      var pool = [];
+      articleArr.forEach(function(_, i) {
+        if (i < Math.ceil(totalItems * 0.22)) pool.push('lg');
+        else if (i < Math.ceil(totalItems * 0.60)) pool.push('md');
+        else pool.push('sm');
+      });
+      for (var i = pool.length - 1; i > 0; i--) {
+        var j = Math.floor(Math.random() * (i + 1));
+        var t = pool[i]; pool[i] = pool[j]; pool[j] = t;
+      }
+      articleArr.forEach(function(el, i) {
+        var size = pool[i];
+        el.classList.add('card-' + size);
+        if (size === 'lg') {
+          var h = el.querySelector('h3');
+          if (h) h.classList.add('md:text-4xl');
         }
-        var s = document.getElementsByTagName("script")[0];
-        s.parentNode.insertBefore(bp, s);
+        if (size === 'sm') {
+          var h2 = el.querySelector('h3');
+          if (h2) h2.classList.add('text-xl');
+        }
+      });
     })();
-</script>
 
-    
-    <script type="text/javascript" size="100" alpha='0.4' zIndex="-1" src="/js/ribbon.min.js"></script>
-    
-      
-<script src="/js/aos/aos.js"></script>
+    // ═══════════════ 筛选逻辑 ═══════════════
+    function getFilteredList() {
+      return articleArr.filter(function(el) {
+        if (currentFilter === 'all')     return true;
+        if (currentFilter === 'featured') return el.getAttribute('data-sticky') === 'true';
+        return el.getAttribute('data-category') === currentFilter;
+      });
+    }
 
-      <script>
-        // https://github.com/michalsnik/aos
-        const themeOffset = parseInt('120') || 120;
-        const themeDelay = parseInt('0')|| 0;
-        const themeDuration = parseInt('400') || 400;
-        const themeEasing = 'ease' || 'ease';
-        const themeOnce = JSON.parse('true' || true);
-        const themeMirror = JSON.parse('false' || false);
-        const themeAnchorPlacement = 'top-bottom' || 'top-bottom';
-        AOS.init({
-          // Global settings:
-          disable: false, // accepts following values: 'phone', 'tablet', 'mobile', boolean, expression or function
-          startEvent: 'DOMContentLoaded', // name of the event dispatched on the document, that AOS should initialize on
-          initClassName: 'aos-init', // class applied after initialization
-          animatedClassName: 'aos-animate', // class applied on animation
-          useClassNames: false, // if true, will add content of `data-aos` as classes on scroll
-          disableMutationObserver: false, // disables automatic mutations' detections (advanced)
-          debounceDelay: 50, // the delay on debounce used while resizing window (advanced)
-          throttleDelay: 99, // the delay on throttle used while scrolling the page (advanced)
+    // ═══════════════ 翻页栏渲染 ═══════════════
+    function buildPaginator(totalPages) {
+      if (totalPages <= 1) { paginatorEl.innerHTML = ''; return; }
 
-          // Settings that can be overridden on per-element basis, by `data-aos-*` attributes:
-          offset: themeOffset, // offset (in px) from the original trigger point
-          delay: themeDelay, // values from 0 to 3000, with step 50ms
-          duration: themeDuration, // values from 0 to 3000, with step 50ms
-          easing: themeEasing, // default easing for AOS animations
-          once: themeOnce, // whether animation should happen only once - while scrolling down
-          mirror: themeMirror, // whether elements should animate out while scrolling past them
-          anchorPlacement: themeAnchorPlacement, // defines which position of the element regarding to window should trigger the animation
+      var html = '';
+      // 上一页
+      html += '<button class="px-3 py-1.5 rounded-full text-xs font-medium transition-colors ' +
+        (currentPage === 1 ? 'text-[#d2d2d7] cursor-default' : 'text-[#86868b] hover:text-[#1d1d1f] hover:bg-[#e8e8ed] cursor-pointer') +
+        '" data-page="' + (currentPage - 1) + '" ' + (currentPage === 1 ? 'disabled' : '') + '>← 上一页</button>';
 
-        });
-      </script>
-    
+      // 页码
+      var pages = [];
+      if (totalPages <= 7) {
+        for (var p = 1; p <= totalPages; p++) pages.push(p);
+      } else {
+        pages.push(1);
+        if (currentPage > 3) pages.push('...');
+        for (var p2 = Math.max(2, currentPage - 1); p2 <= Math.min(totalPages - 1, currentPage + 1); p2++) pages.push(p2);
+        if (currentPage < totalPages - 2) pages.push('...');
+        pages.push(totalPages);
+      }
 
-    
-      <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/v-plugs-ayu/lib/ayu.css">
-<script src="https://cdn.jsdelivr.net/npm/v-plugs-ayu/lib/ayu.umd.min.js"></script>
-<div id="appCopy">
-</div>
-<script>
-  var vm = new Vue({
-    el: '#appCopy',
-    data: {
-    },
-    computed: {
-    },
-    mounted() {
-      const that = this;
-      //  监听 ctrl + c事件  
-      $(document).unbind('keypress').bind('keypress', function (e) {
-        if (e.ctrlKey && e.keyCode == 67) {
-          doSomething();
-          // 返回false, 防止重复触发copy事件  
-          return false;
+      for (var i = 0; i < pages.length; i++) {
+        if (pages[i] === '...') {
+          html += '<span class="px-2 text-[#d2d2d7] text-xs">...</span>';
+        } else if (pages[i] === currentPage) {
+          html += '<span class="px-3 py-1.5 rounded-full text-xs font-semibold bg-[#1d1d1f] text-white">' + pages[i] + '</span>';
+        } else {
+          html += '<button class="px-3 py-1.5 rounded-full text-xs font-medium text-[#86868b] hover:text-[#1d1d1f] hover:bg-[#e8e8ed] transition-colors cursor-pointer" data-page="' + pages[i] + '">' + pages[i] + '</button>';
         }
-      })
+      }
 
-      // 鼠标右键的复制事件  
-      $(document).unbind('copy').bind('copy', function (e) {
-        doSomething();
-        // console.log('右键复制 监听成功');
+      // 下一页
+      html += '<button class="px-3 py-1.5 rounded-full text-xs font-medium transition-colors ' +
+        (currentPage === totalPages ? 'text-[#d2d2d7] cursor-default' : 'text-[#86868b] hover:text-[#1d1d1f] hover:bg-[#e8e8ed] cursor-pointer') +
+        '" data-page="' + (currentPage + 1) + '" ' + (currentPage === totalPages ? 'disabled' : '') + '>下一页 →</button>';
+
+      paginatorEl.innerHTML = html;
+
+      // 绑定翻页事件
+      paginatorEl.querySelectorAll('button[data-page]').forEach(function(btn) {
+        btn.addEventListener('click', function() {
+          var page = parseInt(btn.getAttribute('data-page'));
+          if (page >= 1 && page <= totalPages) {
+            currentPage = page;
+            renderPage();
+            paginatorEl.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+          }
+        });
+      });
+    }
+
+    // ═══════════════ 核心：渲染当前页 ═══════════════
+    function renderPage() {
+      var filtered  = getFilteredList();
+      var totalPages = Math.ceil(filtered.length / perPage) || 1;
+      if (currentPage > totalPages) currentPage = totalPages;
+
+      var start = (currentPage - 1) * perPage;
+      var end   = start + perPage;
+      var visible = filtered.slice(start, end);
+
+      articleArr.forEach(function(el) {
+        var shouldShow = visible.indexOf(el) !== -1;
+        el.style.transition = 'opacity 0.35s ease, transform 0.35s ease';
+
+        if (shouldShow) {
+          el.style.display = 'flex';
+          setTimeout(function() {
+            el.style.opacity = '1';
+            el.style.transform = 'scale(1)';
+          }, 40);
+        } else {
+          el.style.opacity = '0';
+          el.style.transform = 'scale(0.95)';
+          setTimeout(function() {
+            el.style.display = 'none';
+          }, 350);
+        }
       });
 
-      function doSomething() {
-        that.$notify({
-          title: "成功",
-          content: "复制成功了哦",
-          type: 'success'
-        })
-        // console.log('ctrl + c 监听成功');  
-      }
-    },
-    methods: {
-    },
-    created() { }
-  })
-</script>
-    
+      buildPaginator(totalPages);
+    }
 
-    <!-- 输入框打字特效 -->
-    
-      
-<script src="/js/activate-power-mode.js"></script>
-
-      <script>
-          POWERMODE.colorful = true;  // 打开随机颜色特效
-          POWERMODE.shake = false;    // 关闭输入框抖动
-          document.body.addEventListener('input', POWERMODE);//监听打字事件
-      </script>
-    
-
-    <!-- markdown代码一键复制功能 -->
-    
-<script src="/js/clipboard/clipboard.min.js"></script>
-
-    <script>
-      !function (e, t, a) {
-        var copy = '复制';
-        /* code */
-        var initCopyCode = function(){
-          var copyHtml = '';
-          copyHtml += '<button class="btn-copy" data-clipboard-snippet="">';
-          copyHtml += '<i class="fa fa-globe"></i><span>' + copy + '</span>';
-          copyHtml += '</button>';
-          $(".post-detail pre code").before(copyHtml);
-          new ClipboardJS('.btn-copy', {
-              target: function(trigger) {
-                  return trigger.nextElementSibling;
-              }
-          });
-        }
-        initCopyCode();
-      }(window, document);
-    </script>
-
-    
-<script src="/js/lazyload/lazyload@1.9.1.js"></script>
-
-    <script>
-      $(function() {
-        $("div.lazyload, img.lazyload, a.lazyload").lazyload(
-            {
-                effect: "fadeIn",
-                placeholder: "https://cdn.pixabay.com/photo/2020/10/24/03/09/street-5680458__340.jpg"    //图片未加载出来时显示的占位图
-            }
-        );
+    // ═══════════════ 筛选按钮事件 ═══════════════
+    filterBtns.forEach(function(btn) {
+      btn.addEventListener('click', function() {
+        filterBtns.forEach(function(b) { b.classList.remove('active'); });
+        btn.classList.add('active');
+        currentFilter = btn.getAttribute('data-filter');
+        currentPage   = 1;          // 切换筛选回到第 1 页
+        renderPage();
+      });
     });
-    </script>
-  </body>
+
+    // ═══════════════ 初始渲染 ═══════════════
+    renderPage();
+
+    // ═══════════════ 图表 ═══════════════
+    var ctx = document.getElementById('topicsChart');
+    if (ctx) {
+      var chartLabels = ["暂无分类"];
+      var chartDataValues = [1];
+      var chartColors = ["#1d1d1f","#86868b","#d2d2d7","#f5f5f7","#a1a1a6","#e8e8ed","#636366","#48484a"];
+      var bgColors = chartLabels.map(function(_, i) { return chartColors[i % chartColors.length]; });
+
+      new Chart(ctx.getContext('2d'), {
+        type: 'doughnut',
+        data: {
+          labels: chartLabels,
+          datasets: [{ data: chartDataValues, backgroundColor: bgColors, borderWidth: 3, borderColor: '#ffffff', hoverOffset: 8 }]
+        },
+        options: {
+          responsive: true, maintainAspectRatio: false, cutout: '75%',
+          plugins: {
+            legend: { position: 'bottom', labels: { padding: 24, usePointStyle: true, pointStyle: 'circle',
+              font: { family: "'Inter', -apple-system, sans-serif", size: 13, weight: '500' }, color: '#1d1d1f' } },
+            tooltip: {
+              backgroundColor: 'rgba(29, 29, 31, 0.85)',
+              titleFont: { size: 14, family: "'Inter', sans-serif", weight: '600' },
+              bodyFont: { size: 14, family: "'Inter', sans-serif" },
+              padding: 14, cornerRadius: 12, displayColors: true, boxPadding: 6,
+              callbacks: { label: function(ctx2) { var t = ctx2.chart.data.datasets[0].data.reduce(function(a,b){return a+b;},0); var p = t>0?Math.round(ctx2.parsed/t*100):0; return ' ' + ctx2.parsed + ' 篇 (' + p + '%)'; } }
+            }
+          },
+          animation: { animateScale: true, animateRotate: true, duration: 2000, easing: 'easeOutQuart' }
+        }
+      });
+    }
+  });
+</script>
+
+  </main>
+
+  <footer class="bg-[#fbfbfd] pt-20 pb-10 border-t border-[#e8e8ed] px-6 text-[13px] text-[#86868b]">
+  <div class="max-w-5xl mx-auto">
+    <div class="border-b border-[#d2d2d7] pb-10 mb-8 flex flex-col md:flex-row justify-between gap-10">
+      <div>
+        <h4 class="font-semibold text-[#1d1d1f] mb-4 text-sm tracking-wide">资源与订阅</h4>
+        <ul class="space-y-3">
+          
+            <li><a href="https://github.com" target="_blank" class="hover:text-[#1d1d1f] transition-colors">GitHub</a></li>
+          
+          
+          
+        </ul>
+      </div>
+      <div class="text-left md:text-right flex flex-col justify-end">
+        <p class="mb-2 font-medium text-[#1d1d1f]">Stay hungry. Stay foolish.</p>
+        <p>Designed in California style. Handcrafted with Code.</p>
+      </div>
+    </div>
+    <div class="flex flex-col md:flex-row justify-between items-center gap-4">
+      <p>Copyright &copy; 2026 Dragon. 保留所有权利</p>
+      <p>由 <a target="_blank" rel="noopener" href="https://hexo.io" class="hover:text-[#1d1d1f] transition-colors">Hexo</a> & <a target="_blank" rel="noopener" href="https://github.com" class="hover:text-[#1d1d1f] transition-colors">dragon-minimal</a></p>
+    </div>
+  </div>
+</footer>
+
+
+  
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const observer = new IntersectionObserver((entries, obs) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('active');
+          obs.unobserve(entry.target);
+        }
+      });
+    }, {
+      root: null,
+      rootMargin: '0px',
+      threshold: 0.15
+    });
+    document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+  });
+</script>
+
+
+
+  
+  <script>
+    (function() {
+      var btn = document.createElement('button');
+      btn.innerHTML = '&#8593;';
+      btn.setAttribute('aria-label', '返回首页');
+      btn.style.cssText = 'position:fixed;bottom:32px;right:32px;z-index:50;width:44px;height:44px;border-radius:50%;background:#1d1d1f;color:#fff;font-size:20px;cursor:pointer;border:none;box-shadow:0 4px 16px rgba(0,0,0,0.12);opacity:0;transition:opacity 0.3s;pointer-events:none;';
+      document.body.appendChild(btn);
+      window.addEventListener('scroll', function() {
+        btn.style.opacity = window.scrollY > 400 ? '1' : '0';
+        btn.style.pointerEvents = window.scrollY > 400 ? 'auto' : 'none';
+      });
+      btn.addEventListener('click', function() {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      });
+    })();
+  </script>
+  
+
+</body>
 </html>
