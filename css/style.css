@@ -1,14 +1,15 @@
 /* dragon-minimal —  Apple-style Theme */
-/* 补充样式 — 表格、文章排版等 */
+/* 补充样式 — 表格、TOC、暗色模式兼容 */
+/* 主要样式见 layout/_partial/head.ejs（CSS 变量 + 内联 <style>） */
 
-/* ── 文章正文排版 ── */
+/* ── 文章正文（继承 head.ejs 中的 CSS 变量）── */
 .article-content {
   font-size: 17px;
   line-height: 1.85;
-  color: #1d1d1f;
+  color: var(--c-text);
 }
 
-/* ── 表格样式 ── */
+/* ── 表格 ── */
 .article-content table {
   width: 100%;
   border-collapse: collapse;
@@ -17,37 +18,37 @@
   line-height: 1.6;
 }
 .article-content thead {
-  border-bottom: 2px solid #1d1d1f;
+  border-bottom: 2px solid var(--c-text);
 }
 .article-content th {
   text-align: left;
   padding: 12px 16px;
   font-weight: 600;
   font-size: 13px;
-  color: #1d1d1f;
-  background: #f5f5f7;
+  color: var(--c-text);
+  background: var(--c-table-header);
   white-space: nowrap;
 }
 .article-content td {
   padding: 12px 16px;
-  border-bottom: 1px solid #e8e8ed;
+  border-bottom: 1px solid var(--c-border);
   vertical-align: top;
-  color: #1d1d1f;
+  color: var(--c-text);
 }
 .article-content tbody tr:hover {
-  background: #fbfbfd;
+  background: var(--c-hover-row);
 }
 .article-content tbody tr:last-child td {
-  border-bottom: 2px solid #1d1d1f;
+  border-bottom: 2px solid var(--c-text);
 }
 
-/* ── 表格移动端横向滚动容器 ── */
+/* ── 表格移动端 ── */
 .article-content .table-wrapper {
   overflow-x: auto;
   -webkit-overflow-scrolling: touch;
   margin: 2rem 0;
   border-radius: 12px;
-  border: 1px solid #e8e8ed;
+  border: 1px solid var(--c-border);
 }
 .article-content .table-wrapper table {
   margin: 0;

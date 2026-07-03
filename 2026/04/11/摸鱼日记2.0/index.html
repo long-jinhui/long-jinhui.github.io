@@ -5,44 +5,128 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>摸鱼日记2.0 | Dragon</title>
+  <!-- 防闪烁：在任何 CSS/内容渲染前应用 dark 类 -->
+  <script>
+    (function() {
+      var s = localStorage.getItem('theme-preference');
+      if (s === 'dark' || (!s && window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+        document.documentElement.classList.add('dark');
+      }
+    })();
+  </script>
   <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {}
+      }
+    }
+  </script>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet">
   
 <link rel="stylesheet" href="/css/style.css">
 
   <style>
+    /* ══════════════════════════════════════
+        CSS 变量 — 亮色 / 暗色双主题
+       ══════════════════════════════════════ */
+    :root {
+      --c-bg:               #fbfbfd;
+      --c-bg-alt:           #ffffff;
+      --c-text:             #1d1d1f;
+      --c-text-secondary:   #86868b;
+      --c-border:           #e8e8ed;
+      --c-border-light:     rgba(0,0,0,0.06);
+      --c-code-bg:          #f5f5f7;
+      --c-table-header:     #f5f5f7;
+      --c-hover-row:        #fbfbfd;
+      --c-blockquote-border:#d2d2d7;
+      --c-link:             #0066cc;
+      --c-link-underline:   rgba(0,102,204,0.3);
+      --c-shadow-sm:        rgba(0,0,0,0.04);
+      --c-shadow-md:        rgba(0,0,0,0.08);
+      --c-nav-bg:           rgba(255,255,255,0.70);
+      --c-nav-text:         rgba(29,29,31,0.80);
+      --c-filter-active-bg: #e8e8ed;
+      --c-scrollbar-thumb:  #d2d2d7;
+      --c-scrollbar-track:  #fbfbfd;
+      --c-toc-link:         #86868b;
+      --c-toc-active:       #1d1d1f;
+      --c-toc-active-bg:    rgba(0,0,0,0.04);
+      --c-btn-bg:           #1d1d1f;
+      --c-btn-text:         #ffffff;
+      --c-pre-bg:           #1d1d1f;
+      --c-pre-text:         #f5f5f7;
+    }
+    .dark {
+      --c-bg:               #111113;
+      --c-bg-alt:           #1c1c1e;
+      --c-text:             #f5f5f7;
+      --c-text-secondary:   #98989d;
+      --c-border:           #3a3a3c;
+      --c-border-light:     rgba(255,255,255,0.08);
+      --c-code-bg:          #2c2c2e;
+      --c-table-header:     #2c2c2e;
+      --c-hover-row:        #232325;
+      --c-blockquote-border:#48484a;
+      --c-link:             #64a0ff;
+      --c-link-underline:   rgba(100,160,255,0.3);
+      --c-shadow-sm:        rgba(0,0,0,0.2);
+      --c-shadow-md:        rgba(0,0,0,0.4);
+      --c-nav-bg:           rgba(17,17,19,0.80);
+      --c-nav-text:         rgba(245,245,247,0.80);
+      --c-filter-active-bg: #3a3a3c;
+      --c-scrollbar-thumb:  #48484a;
+      --c-scrollbar-track:  #111113;
+      --c-toc-link:         #98989d;
+      --c-toc-active:       #f5f5f7;
+      --c-toc-active-bg:    rgba(255,255,255,0.06);
+      --c-btn-bg:           #f5f5f7;
+      --c-btn-text:         #1d1d1f;
+      --c-pre-bg:           #2c2c2e;
+      --c-pre-text:         #f5f5f7;
+    }
+
+    /* ═══════════ 基础 ═══════════ */
     body {
       font-family: 'Inter', -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-      background-color: #fbfbfd;
-      color: #1d1d1f;
+      background-color: var(--c-bg);
+      color: var(--c-text);
       -webkit-font-smoothing: antialiased;
       -moz-osx-font-smoothing: grayscale;
+      transition: background-color 0.3s ease, color 0.3s ease;
     }
     ::-webkit-scrollbar { width: 12px; }
-    ::-webkit-scrollbar-track { background: #fbfbfd; }
-    ::-webkit-scrollbar-thumb { background-color: #d2d2d7; border-radius: 20px; border: 3px solid #fbfbfd; }
+    ::-webkit-scrollbar-track { background: var(--c-scrollbar-track); }
+    ::-webkit-scrollbar-thumb { background-color: var(--c-scrollbar-thumb); border-radius: 20px; border: 3px solid var(--c-scrollbar-track); }
 
+    /* ═══════════ 滚动动画 ═══════════ */
     .reveal {
       opacity: 0;
       transform: translateY(40px);
       transition: all 1.2s cubic-bezier(0.16, 1, 0.3, 1);
     }
     .reveal.active { opacity: 1; transform: translateY(0); }
+    noscript .reveal,
+    .reveal.force-visible { opacity: 1; transform: translateY(0); }
 
+    /* ═══════════ 卡片 ═══════════ */
     .apple-card {
-      background-color: #ffffff;
+      background-color: var(--c-bg-alt);
       border-radius: 28px;
-      box-shadow: 0 4px 24px rgba(0,0,0,0.04);
+      box-shadow: 0 4px 24px var(--c-shadow-sm);
       transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.4s ease;
     }
     .apple-card:hover {
       transform: scale(1.02);
-      box-shadow: 0 12px 32px rgba(0,0,0,0.08);
+      box-shadow: 0 12px 32px var(--c-shadow-md);
     }
 
+    /* ═══════════ 按钮 ═══════════ */
     .btn-primary {
-      background-color: #1d1d1f;
-      color: white;
+      background-color: var(--c-btn-bg);
+      color: var(--c-btn-text);
       border-radius: 999px;
       padding: 12px 24px;
       font-size: 15px;
@@ -51,8 +135,28 @@
     }
     .btn-primary:hover { opacity: 0.8; transform: scale(1.05); }
 
+    /* ═══════════ 暗色模式切换按钮 ═══════════ */
+    #theme-toggle {
+      width: 36px; height: 36px;
+      border-radius: 50%;
+      border: none;
+      cursor: pointer;
+      background: transparent;
+      display: flex; align-items: center; justify-content: center;
+      color: var(--c-text-secondary);
+      transition: color 0.2s, background 0.2s;
+      flex-shrink: 0;
+    }
+    #theme-toggle:hover { color: var(--c-text); background: var(--c-code-bg); }
+    #theme-toggle svg { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+    #theme-toggle .icon-sun  { display: none; }
+    #theme-toggle .icon-moon { display: block; }
+    .dark #theme-toggle .icon-sun  { display: block; }
+    .dark #theme-toggle .icon-moon { display: none; }
+
+    /* ═══════════ 筛选按钮 ═══════════ */
     .filter-btn {
-      color: #86868b;
+      color: var(--c-text-secondary);
       font-size: 14px;
       font-weight: 500;
       padding: 6px 16px;
@@ -60,7 +164,7 @@
       transition: all 0.3s ease;
       cursor: pointer;
     }
-    .filter-btn.active { color: #1d1d1f; background-color: #e8e8ed; }
+    .filter-btn.active { color: var(--c-text); background-color: var(--c-filter-active-bg); }
 
     .chart-container {
       position: relative;
@@ -72,10 +176,17 @@
       max-height: 400px;
     }
 
+    /* ══════════════════════════════════════
+        文章正文 — 完整暗色适配
+       ══════════════════════════════════════ */
     .article-content {
       font-size: 17px;
       line-height: 1.85;
-      color: #1d1d1f;
+      color: var(--c-text);
+    }
+    .article-content h2, .article-content h3, .article-content h4,
+    .article-content h5, .article-content h6 {
+      color: var(--c-text);
     }
     .article-content h2 {
       font-size: 1.75rem;
@@ -88,26 +199,31 @@
       font-weight: 600;
       margin: 2rem 0 0.75rem;
     }
+    .article-content h4 {
+      font-size: 1.15rem;
+      font-weight: 600;
+      margin: 1.8rem 0 0.6rem;
+    }
     .article-content p { margin-bottom: 1.6rem; }
-    .article-content strong { font-weight: 600; }
+    .article-content strong { font-weight: 600; color: var(--c-text); }
     .article-content a {
-      color: #0066cc;
+      color: var(--c-link);
       text-decoration: none;
-      border-bottom: 1px solid rgba(0,102,204,0.3);
+      border-bottom: 1px solid var(--c-link-underline);
       transition: border-color 0.2s;
     }
-    .article-content a:hover { border-color: #0066cc; }
+    .article-content a:hover { border-color: var(--c-link); }
     .article-content :not(pre) > code {
-      background: #f5f5f7;
-      color: #1d1d1f;
+      background: var(--c-code-bg);
+      color: var(--c-text);
       padding: 3px 8px;
       border-radius: 6px;
       font-size: 0.88em;
       font-family: "SF Mono", "Fira Code", "Cascadia Code", Consolas, monospace;
     }
     .article-content pre {
-      background: #1d1d1f;
-      color: #f5f5f7;
+      background: var(--c-pre-bg);
+      color: var(--c-pre-text);
       padding: 1.5rem 1.75rem;
       border-radius: 16px;
       overflow-x: auto;
@@ -118,19 +234,19 @@
     }
     .article-content pre code { background: transparent; padding: 0; font-size: inherit; color: inherit; }
     .article-content blockquote {
-      border-left: 4px solid #d2d2d7;
+      border-left: 4px solid var(--c-blockquote-border);
       padding: 0.5rem 0 0.5rem 1.5rem;
-      color: #86868b;
+      color: var(--c-text-secondary);
       font-style: italic;
       margin: 2rem 0;
     }
     .article-content ul, .article-content ol { margin: 1.2rem 0; padding-left: 1.5rem; }
     .article-content li { margin-bottom: 0.5rem; }
-    .article-content ul li::marker { color: #86868b; }
+    .article-content ul li::marker { color: var(--c-text-secondary); }
     .article-content img { max-width: 100%; border-radius: 16px; margin: 2rem 0; }
-    .article-content hr { border: none; border-top: 1px solid #e8e8ed; margin: 3rem 0; }
+    .article-content hr { border: none; border-top: 1px solid var(--c-border); margin: 3rem 0; }
 
-    /* ── 表格样式 ── */
+    /* ── 表格 ── */
     .article-content table {
       width: 100%;
       border-collapse: collapse;
@@ -139,49 +255,41 @@
       line-height: 1.6;
     }
     .article-content thead {
-      border-bottom: 2px solid #1d1d1f;
+      border-bottom: 2px solid var(--c-text);
     }
     .article-content th {
       text-align: left;
       padding: 12px 16px;
       font-weight: 600;
       font-size: 13px;
-      color: #1d1d1f;
-      background: #f5f5f7;
+      color: var(--c-text);
+      background: var(--c-table-header);
       white-space: nowrap;
     }
     .article-content td {
       padding: 12px 16px;
-      border-bottom: 1px solid #e8e8ed;
+      border-bottom: 1px solid var(--c-border);
       vertical-align: top;
-      color: #1d1d1f;
+      color: var(--c-text);
     }
     .article-content tbody tr:hover {
-      background: #fbfbfd;
+      background: var(--c-hover-row);
     }
     .article-content tbody tr:last-child td {
-      border-bottom: 2px solid #1d1d1f;
+      border-bottom: 2px solid var(--c-text);
     }
-
-    /* ── 表格移动端横向滚动 ── */
     .article-content .table-wrapper {
       overflow-x: auto;
       -webkit-overflow-scrolling: touch;
       margin: 2rem 0;
       border-radius: 12px;
-      border: 1px solid #e8e8ed;
+      border: 1px solid var(--c-border);
     }
-    .article-content .table-wrapper table {
-      margin: 0;
-      min-width: 600px;
-    }
-    .article-content .table-wrapper thead th {
-      background: transparent;
-    }
-    .article-content .table-wrapper tbody tr:last-child td {
-      border-bottom: none;
-    }
+    .article-content .table-wrapper table { margin: 0; min-width: 600px; }
+    .article-content .table-wrapper thead th { background: transparent; }
+    .article-content .table-wrapper tbody tr:last-child td { border-bottom: none; }
 
+    /* ═══════════ 其他 ═══════════ */
     .author-avatar {
       width: 32px; height: 32px; border-radius: 50%;
       background: linear-gradient(135deg, #1d1d1f, #86868b);
@@ -189,13 +297,10 @@
       display: flex; align-items: center; justify-content: center;
       flex-shrink: 0;
     }
-
     .page-cover {
       width: 100%; height: 35vh; overflow: hidden;
       background-size: cover; background-position: center center;
     }
-
-    /* 首页卡片三种尺寸 */
     .card-lg  { min-height: 500px; }
     .card-md  { min-height: 380px; }
     .card-sm  { min-height: 260px; }
@@ -203,72 +308,297 @@
     @media (min-width: 768px) {
       .card-lg { grid-column: span 2; }
     }
+
+    /* ══════════════════════════════════════
+        大纲 (TOC) — 层级分明 + 暗色适配
+       ══════════════════════════════════════ */
+    .toc-nav { font-size: 13px; line-height: 1.6; }
+
+    /* 根列表 & 嵌套列表 */
+    .toc-list {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+    /* 子列表缩进 — 体现层级 */
+    .toc-list .toc-list,
+    .toc-child {
+      padding-left: 16px;
+      margin: 2px 0 4px;
+      border-left: 1px solid var(--c-border);
+      margin-left: 6px;
+    }
+
+    .toc-item {
+      padding: 0;
+      margin: 0;
+      list-style: none;
+    }
+
+    .toc-link {
+      display: block;
+      padding: 5px 0 5px 14px;
+      color: var(--c-toc-link);
+      text-decoration: none;
+      border-left: 2px solid transparent;
+      margin-left: -1px;
+      transition: all 0.2s ease;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      border-radius: 0 6px 6px 0;
+    }
+    .toc-link:hover {
+      color: var(--c-toc-active);
+      border-left-color: var(--c-blockquote-border);
+    }
+
+    /* 当前激活章节 — 强突出 */
+    .toc-item.active > .toc-link {
+      color: var(--c-toc-active);
+      border-left-color: var(--c-toc-active);
+      font-weight: 600;
+      background: var(--c-toc-active-bg);
+    }
+
+    /* 层级字号递减 */
+    .toc-level-2 > .toc-link { font-weight: 500; font-size: 13px; }
+    .toc-level-3 > .toc-link { font-size: 12px; }
+    .toc-level-4 > .toc-link { font-size: 11px; }
+    .toc-level-5 > .toc-link { font-size: 11px; opacity: 0.8; }
+
+    /* 子级 TOC 内的缩进（当没有嵌套 ol 时） */
+    .toc-level-3 > .toc-link { padding-left: 24px; }
+    .toc-level-4 > .toc-link { padding-left: 34px; }
+    .toc-level-5 > .toc-link { padding-left: 44px; }
+
+    /* 移动端大纲 */
+    #toc-mobile { background: var(--c-bg-alt); border-color: var(--c-border); }
+    #toc-mobile summary::-webkit-details-marker { display: none; }
+    #toc-mobile summary::marker { display: none; content: ''; }
+    #toc-mobile summary { color: var(--c-text); }
+    #toc-mobile summary:hover { background: var(--c-code-bg); }
+    #toc-mobile .toc-nav { border-color: var(--c-border); }
+    #toc-mobile .toc-link { padding: 3px 0 3px 14px; }
+    #toc-mobile .toc-level-3 > .toc-link { padding-left: 24px; }
+    #toc-mobile .toc-level-4 > .toc-link { padding-left: 34px; }
+
+    /* 侧边栏大纲 */
+    #toc-sidebar .toc-nav {
+      max-height: calc(100vh - 160px);
+      overflow-y: auto;
+    }
+    #toc-sidebar .toc-nav::-webkit-scrollbar { width: 4px; }
+    #toc-sidebar .toc-nav::-webkit-scrollbar-thumb {
+      background: var(--c-scrollbar-thumb);
+      border-radius: 4px;
+    }
+
+    /* ══════════════════════════════════════
+       暗色模式下 Tailwind 硬编码颜色的覆盖
+       ══════════════════════════════════════ */
+    /* 导航栏 hover */
+    .dark nav a.hover\:text-black:hover { color: var(--c-text) !important; }
+
+    /* Hero / 首页文字 */
+    .dark .text-\[\#1d1d1f\] { color: var(--c-text) !important; }
+    .dark .text-\[\#1d1d1f\]\/70,
+    .dark .text-\[\#1d1d1f\]\/80,
+    .dark .text-\[\#1d1d1f\]\/90 { color: var(--c-text-secondary) !important; }
+    .dark .text-\[\#86868b\] { color: var(--c-text-secondary) !important; }
+    .dark .text-\[\#0066cc\] { color: var(--c-link) !important; }
+
+    /* 卡片 */
+    .dark .bg-white { background-color: var(--c-bg-alt) !important; }
+    .dark .bg-\[\#ffffff\] { background-color: var(--c-bg-alt) !important; }
+    .dark .bg-\[\#fbfbfd\] { background-color: var(--c-bg) !important; }
+    .dark .bg-\[\#f5f5f7\] { background-color: var(--c-code-bg) !important; }
+    .dark .bg-\[\#1d1d1f\].text-white,
+    .dark .bg-\[\#1d1d1f\] .text-white { background-color: var(--c-bg-alt) !important; }
+
+    /* 边框 */
+    .dark .border-\[\#e8e8ed\]\/50,
+    .dark .border-\[\#e8e8ed\] { border-color: var(--c-border) !important; }
+    .dark .border-\[\#f5f5f7\] { border-color: var(--c-border) !important; }
+    .dark .border-\[\#d2d2d7\] { border-color: var(--c-blockquote-border) !important; }
+    .dark .border-gray-100 { border-color: var(--c-border) !important; }
+
+    /* 阴影 */
+    .dark .shadow-sm { box-shadow: 0 1px 2px var(--c-shadow-sm) !important; }
+
+    /* 筛选按钮容器 */
+    .dark .bg-white.p-1.rounded-full.inline-flex.shadow-sm.border {
+      background-color: var(--c-bg-alt) !important;
+      border-color: var(--c-border) !important;
+    }
+
+    /* hover 文字色 */
+    .dark .hover\:text-black:hover { color: var(--c-text) !important; }
+    .dark .hover\:bg-\[\#e8e8ed\]:hover { background-color: var(--c-filter-active-bg) !important; }
+    .dark .hover\:text-\[\#1d1d1f\]:hover { color: var(--c-text) !important; }
+
+    /* text-white/70 等半透明文字（精选卡片用） */
+    .dark .text-white\/50 { color: var(--c-text-secondary) !important; }
+    .dark .text-white\/70 { color: var(--c-text) !important; opacity: 0.7; }
+    .dark .bg-white\/10 { background-color: rgba(255,255,255,0.08) !important; }
+
+    /* 页脚 */
+    .dark footer .text-\[\#1d1d1f\] { color: var(--c-text) !important; }
+    .dark footer .text-\[\#86868b\] { color: var(--c-text-secondary) !important; }
+    .dark footer .border-\[\#d2d2d7\] { border-color: var(--c-blockquote-border) !important; }
+    .dark footer .hover\:text-\[\#1d1d1f\]:hover { color: var(--c-text) !important; }
+
+    /* 大纲目录标题 */
+    .dark .text-\[\#86868b\].text-xs.font-semibold.uppercase.tracking-widest,
+    .dark #toc-sidebar h4 { color: var(--c-text-secondary) !important; }
+
+    /* goTop 按钮 */
+    .dark button[aria-label] {
+      background: var(--c-btn-bg) !important;
+      color: var(--c-btn-text) !important;
+      box-shadow: 0 4px 16px var(--c-shadow-md) !important;
+    }
   </style>
 <meta name="generator" content="Hexo 5.2.0"></head>
 
 <body class="relative">
 
-  <nav class="fixed top-0 w-full z-50 bg-white/70 backdrop-blur-lg border-b border-[#e8e8ed]/50 transition-all duration-300">
-  <div class="max-w-5xl mx-auto px-6 h-14 flex items-center justify-between text-xs tracking-wide font-medium text-[#1d1d1f]/80">
-    <a href="/" class="font-semibold text-lg hover:text-black transition-colors">&#63743; Node</a>
+  <nav class="fixed top-0 w-full z-50 backdrop-blur-lg border-b transition-colors duration-300" style="background:var(--c-nav-bg);border-color:var(--c-border);">
+  <div class="max-w-5xl mx-auto px-6 h-14 flex items-center justify-between text-xs tracking-wide font-medium" style="color:var(--c-nav-text);">
+    <a href="/" class="font-semibold text-lg hover:text-black transition-colors" style="color:var(--c-text);">&#63743; Node</a>
     <div class="hidden md:flex space-x-10">
       
-        <a href="/" class="hover:text-black transition-colors">概览</a>
+        <a href="/" class="hover:text-black transition-colors" style="color:var(--c-nav-text);">概览</a>
       
-        <a href="/archives" class="hover:text-black transition-colors">文章</a>
+        <a href="/archives" class="hover:text-black transition-colors" style="color:var(--c-nav-text);">文章</a>
       
-        <a href="/categories" class="hover:text-black transition-colors">分类</a>
+        <a href="/categories" class="hover:text-black transition-colors" style="color:var(--c-nav-text);">分类</a>
       
     </div>
-    
-      <a href="/about" class="flex flex-col items-center gap-0.5 flex-shrink-0 group">
-        <img src="/images/avatar.png" class="w-7 h-7 rounded-full object-cover ring-2 ring-transparent group-hover:ring-[#d2d2d7] transition-all" alt="avatar">
-        <span class="text-[10px] text-[#86868b] group-hover:text-[#1d1d1f] transition-colors leading-none">Dragon</span>
-      </a>
-    
+    <div class="flex items-center gap-2">
+      <!-- 暗色模式切换 -->
+      <button id="theme-toggle" aria-label="切换暗色模式" title="切换暗色模式">
+        <!-- 月亮图标（亮色模式显示） -->
+        <svg class="icon-moon" viewBox="0 0 24 24">
+          <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+        </svg>
+        <!-- 太阳图标（暗色模式显示） -->
+        <svg class="icon-sun" viewBox="0 0 24 24">
+          <circle cx="12" cy="12" r="5"/>
+          <line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/>
+          <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/>
+          <line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/>
+          <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
+        </svg>
+      </button>
+      
+        <a href="/about" class="flex flex-col items-center gap-0.5 flex-shrink-0 group">
+          <img src="/images/avatar.png" class="w-7 h-7 rounded-full object-cover ring-2 ring-transparent group-hover:ring-[#d2d2d7] transition-all" alt="avatar">
+          <span class="text-[10px] text-[#86868b] group-hover:text-[#1d1d1f] transition-colors leading-none">Dragon</span>
+        </a>
+      
+    </div>
   </div>
 </nav>
 
 
+  <!-- 暗色模式切换 -->
+  <script>
+  (function() {
+    var html = document.documentElement;
+    var toggle = document.getElementById('theme-toggle');
+    var KEY = 'theme-preference';
+    if (!toggle) return;
+
+    toggle.addEventListener('click', function() {
+      var isDark = html.classList.contains('dark');
+      if (isDark) {
+        html.classList.remove('dark');
+        localStorage.setItem(KEY, 'light');
+      } else {
+        html.classList.add('dark');
+        localStorage.setItem(KEY, 'dark');
+      }
+    });
+
+    // 系统主题变化时跟随（仅当用户未曾手动设置时）
+    if (window.matchMedia) {
+      window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', function(e) {
+        if (!localStorage.getItem(KEY)) {
+          if (e.matches) html.classList.add('dark');
+          else html.classList.remove('dark');
+        }
+      });
+    }
+  })();
+  </script>
+
   <main style="margin-top: 56px;">
-    <article class="pt-28 pb-20 px-6">
-  <div class="max-w-3xl mx-auto">
-    <div class="text-xs text-[#86868b] mb-8 tracking-wide reveal">
-      <a href="/" class="hover:text-black transition-colors">Dragon</a>
-      <span class="mx-2">/</span>
+    
+
+<article class="pt-28 pb-20 px-6">
+  <div class="max-w-6xl mx-auto">
+    <div class="flex gap-10 lg:gap-16">
+
+      <!-- ═══════════ 大纲侧边栏 ═══════════ -->
       
-      <span>摸鱼日记2.0</span>
-    </div>
+      <aside class="hidden xl:block w-56 flex-shrink-0" id="toc-sidebar">
+        <div class="sticky top-24">
+          <h4 class="text-xs font-semibold text-[#86868b] uppercase tracking-widest mb-4">目录</h4>
+          <nav class="toc-nav" id="toc-nav">
+            <ol class="toc-list"><li class="toc-item toc-level-2"><a class="toc-link" href="#序-丧钟为谁而鸣"><span class="toc-text">序.丧钟为谁而鸣</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#985教985考985"><span class="toc-text">985教985考985</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#就拿圆玄来简单举个例"><span class="toc-text">就拿圆玄来简单举个例</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#目光转向学而思"><span class="toc-text">目光转向学而思</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#对了，还有个卖书的。"><span class="toc-text">对了，还有个卖书的。</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#分岔路"><span class="toc-text">分岔路</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#望父成龙"><span class="toc-text">望父成龙</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#序"><span class="toc-text">序</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#原生家庭の痛"><span class="toc-text">原生家庭の痛</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#时代红利-个人能力"><span class="toc-text">时代红利 != 个人能力</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#不称职的天才"><span class="toc-text">不称职的天才</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Drinking-on-till-the-Piss-Runs-Clear"><span class="toc-text">Drinking on till the Piss Runs Clear</span></a></li></ol>
+          </nav>
+        </div>
+      </aside>
+      
 
-    <header class="mb-12 reveal">
-      <h1 class="text-4xl md:text-5xl font-bold tracking-tight mb-6 leading-tight">摸鱼日记2.0</h1>
-      <div class="flex flex-wrap items-center gap-4 text-sm text-[#86868b]">
-        
-          <span class="author-avatar">D</span>
-          <span class="font-medium text-[#1d1d1f]">Dragon</span>
-          <span>·</span>
-        
-        <time>2026年04月11日</time>
-        <span>·</span>
-        <span>8340 字</span>
-        <span>·</span>
-        <span>28 分钟阅读</span>
-      </div>
-    </header>
+      <!-- ═══════════ 文章主体 ═══════════ -->
+      <div class="min-w-0 flex-1 max-w-3xl">
 
-    <div class="article-content reveal">
-      <h1 id="摸鱼日记2-0"><a href="#摸鱼日记2-0" class="headerlink" title="摸鱼日记2.0"></a>摸鱼日记2.0</h1><h2 id="序-丧钟为谁而鸣"><a href="#序-丧钟为谁而鸣" class="headerlink" title="序.丧钟为谁而鸣"></a>序.丧钟为谁而鸣</h2><pre><code>三载归来，尘满衣冠。欲语先哽，落笔如剜。 昔在西曹，键作马鞍。今栖东市，舌耕为餐。满堂童子，目似鱼攒。我吐珠玉，彼观泥丸。 注水文牍，汗牛充栏。名曰课业，实乃欺谩。父母望龙，烹犬为鸾。我辈画饼，指水为澜。 技成屠龙，鬻作灵丹。术成屠狗，敢称圣坛。夜来独坐，旧剑自看。霜刃犹在，匣冷光寒。 何以易粟，何以求安。弃剑操琴，强笑承欢。念此长愧，笔墨皆酸。风骨几何，不值一餐。 生存为命，操守为冠。孰轻孰重，不言自残。何以坚守，何以不谩。把剑三问，四壁空坛。 先写为敬，以此自棺。</code></pre>
+        <div class="text-xs text-[#86868b] mb-8 tracking-wide reveal">
+          <a href="/" class="hover:text-black transition-colors">Dragon</a>
+          <span class="mx-2">/</span>
+          
+          <span>摸鱼日记2.0</span>
+        </div>
+
+        <header class="mb-12 reveal">
+          <h1 class="text-4xl md:text-5xl font-bold tracking-tight mb-6 leading-tight">摸鱼日记2.0</h1>
+          <div class="flex flex-wrap items-center gap-4 text-sm text-[#86868b]">
+            
+              <span class="author-avatar">D</span>
+              <span class="font-medium text-[#1d1d1f]">Dragon</span>
+              <span>·</span>
+            
+            <time>2026年04月11日</time>
+            <span>·</span>
+            <span>8322 字</span>
+            <span>·</span>
+            <span>28 分钟阅读</span>
+          </div>
+        </header>
+
+        <!-- ═══════════ 移动端大纲（折叠） ═══════════ -->
+        
+        <details class="xl:hidden mb-8 bg-white rounded-2xl border border-[#e8e8ed] overflow-hidden reveal" id="toc-mobile">
+          <summary class="px-5 py-3 text-sm font-semibold text-[#1d1d1f] cursor-pointer select-none hover:bg-[#f5f5f7] transition-colors">
+            目录
+          </summary>
+          <nav class="toc-nav px-5 pb-4 pt-1 border-t border-[#e8e8ed]" id="toc-nav-mobile">
+            <ol class="toc-list"><li class="toc-item toc-level-2"><a class="toc-link" href="#序-丧钟为谁而鸣"><span class="toc-text">序.丧钟为谁而鸣</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#985教985考985"><span class="toc-text">985教985考985</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#就拿圆玄来简单举个例"><span class="toc-text">就拿圆玄来简单举个例</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#目光转向学而思"><span class="toc-text">目光转向学而思</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#对了，还有个卖书的。"><span class="toc-text">对了，还有个卖书的。</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#分岔路"><span class="toc-text">分岔路</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#望父成龙"><span class="toc-text">望父成龙</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#序"><span class="toc-text">序</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#原生家庭の痛"><span class="toc-text">原生家庭の痛</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#时代红利-个人能力"><span class="toc-text">时代红利 != 个人能力</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#不称职的天才"><span class="toc-text">不称职的天才</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Drinking-on-till-the-Piss-Runs-Clear"><span class="toc-text">Drinking on till the Piss Runs Clear</span></a></li></ol>
+          </nav>
+        </details>
+        
+
+        <div class="article-content reveal">
+          <h1 id="摸鱼日记2-0"><a href="#摸鱼日记2-0" class="headerlink" title="摸鱼日记2.0"></a>摸鱼日记2.0</h1><h2 id="序-丧钟为谁而鸣"><a href="#序-丧钟为谁而鸣" class="headerlink" title="序.丧钟为谁而鸣"></a>序.丧钟为谁而鸣</h2><p>​    三载归来，尘满衣冠。欲语先哽，落笔如剜。 昔在西曹，键作马鞍。今栖东市，舌耕为餐。满堂童子，目似鱼攒。我吐珠玉，彼观泥丸。 注水文牍，汗牛充栏。名曰课业，实乃欺谩。父母望龙，烹犬为鸾。我辈画饼，指水为澜。 技成屠龙，鬻作灵丹。术成屠狗，敢称圣坛。夜来独坐，旧剑自看。霜刃犹在，匣冷光寒。 何以易粟，何以求安。弃剑操琴，强笑承欢。念此长愧，笔墨皆酸。风骨几何，不值一餐。 生存为命，操守为冠。孰轻孰重，不言自残。何以坚守，何以不谩。把剑三问，四壁空坛。 先写为敬，以此自棺。</p>
 <hr>
-<pre><code>尽管已经跟Gemini等心理医生沟通过，心情现在也逐渐平复了下来，但还是得去控诉一下，中国到底是一些什么人在教什么书？上一代(改开)到底吃了多少红利？我这代该怎么办？得益于我的ai和我的拖延症，我现在还欠下大概三四篇博客，一个大看板，一个数学模型....我不会去做过多的解释，但停下来的时候或者吐槽的时候我时常会停顿：不对，不只是ta的问题。国家，社会，个人......好像所有的东西都有条看不见的线串在一起，就在从长江三峡回来后。
-
-这种感觉很奇怪，要是放在以前，我抓着&quot;教育培训==制造焦虑&quot;这条等式再加上全局变量&quot;内卷&quot;就能骂个千八百字，但现在我知道，基于进入此行业的绝对时长，导致我只能输出一些相对的可笑观点。如果我不把需求，市场，上下游产业链等等东西串起来，我根本无法写出关于&quot;教培&quot;的任意一个句子，这跟我的&quot;文学造诣&quot;没有关系。吃多少拉多少，摄入的东西多了，拉不出来就很难受。回到家长身上，某些时候，我甚至能在某些小孩和家长身上看到他们的过去以及未来，他们的经济情况，老家，语言，家庭底色，文化程度，权力结构。
-
-摸鱼日记创办的初心是在摸鱼时写下点关于工作吐槽，烂白话，脱口秀手稿，等等......核心就是摸鱼，其次才是记，所以不管怎么样，开始吧。</code></pre>
-<h2 id="985教985考985"><a href="#985教985考985" class="headerlink" title="985教985考985"></a>985教985考985</h2><pre><code>感谢我的前任，18年高考英语满分，能从河北县城一路冲杀上来，什么水平不用我多说(ok其实是避嫌)，阴差阳错的，我踏入了教培这条路，也正是她让我能以局内人的身份去重新审视了&quot;教育是一门生意&quot;这句话。
-
-就大陆而言，若以大学(本科/大专)作为教育终点，则教育这个板块大致分为两个生态位，其一是以国家牵头的公办院校所代表的体制内，其二则是以包括但不限于民办院校学而思新东方卓越(华南地区)以及小学旁三无托管班的教培机构，也就是私企，当然还有新华书店出版社这种两头吃的教材垄断机构，对标&quot;在金矿旁边卖铲子的商家&quot;。
-
-这样一看，因为所以就出来了，我想弄高点分，要么进体制，要么进私企。在家庭教育支出相同的情况下，顶级的体制内院校和一学期几万甚至几十万的贵族学校没什么区别，回归到中位数附近，或者就拿我自身举例，公办院校+课外辅导机构在理想状态能抹平教育资源分布不均和学生老师供需不匹配等问题，前者代表着廉价但由政府背书的教育资源，而后者则可以在此基础上查漏补缺，培优扶差。</code></pre>
+<p>​    尽管已经跟Gemini等心理医生沟通过，心情现在也逐渐平复了下来，但还是得去控诉一下，中国到底是一些什么人在教什么书？上一代(改开)到底吃了多少红利？我这代该怎么办？得益于我的ai和我的拖延症，我现在还欠下大概三四篇博客，一个大看板，一个数学模型….我不会去做过多的解释，但停下来的时候或者吐槽的时候我时常会停顿：不对，不只是ta的问题。国家，社会，个人……好像所有的东西都有条看不见的线串在一起，就在从长江三峡回来后。</p>
+<p>​    这种感觉很奇怪，要是放在以前，我抓着”教育培训==制造焦虑”这条等式再加上全局变量”内卷”就能骂个千八百字，但现在我知道，基于进入此行业的绝对时长，导致我只能输出一些相对的可笑观点。如果我不把需求，市场，上下游产业链等等东西串起来，我根本无法写出关于”教培”的任意一个句子，这跟我的”文学造诣”没有关系。吃多少拉多少，摄入的东西多了，拉不出来就很难受。回到家长身上，某些时候，我甚至能在某些小孩和家长身上看到他们的过去以及未来，他们的经济情况，老家，语言，家庭底色，文化程度，权力结构。</p>
+<p>​    摸鱼日记创办的初心是在摸鱼时写下点关于工作吐槽，烂白话，脱口秀手稿，等等……核心就是摸鱼，其次才是记，所以不管怎么样，开始吧。</p>
+<h2 id="985教985考985"><a href="#985教985考985" class="headerlink" title="985教985考985"></a>985教985考985</h2><p>​    感谢我的前任，18年高考英语满分，能从河北县城一路冲杀上来，什么水平不用我多说(ok其实是避嫌)，阴差阳错的，我踏入了教培这条路，也正是她让我能以局内人的身份去重新审视了”教育是一门生意”这句话。</p>
+<p>​    就大陆而言，若以大学(本科/大专)作为教育终点，则教育这个板块大致分为两个生态位，其一是以国家牵头的公办院校所代表的体制内，其二则是以包括但不限于民办院校学而思新东方卓越(华南地区)以及小学旁三无托管班的教培机构，也就是私企，当然还有新华书店出版社这种两头吃的教材垄断机构，对标”在金矿旁边卖铲子的商家”。</p>
+<p>​    这样一看，因为所以就出来了，我想弄高点分，要么进体制，要么进私企。在家庭教育支出相同的情况下，顶级的体制内院校和一学期几万甚至几十万的贵族学校没什么区别，回归到中位数附近，或者就拿我自身举例，公办院校+课外辅导机构在理想状态能抹平教育资源分布不均和学生老师供需不匹配等问题，前者代表着廉价但由政府背书的教育资源，而后者则可以在此基础上查漏补缺，培优扶差。</p>
 <h3 id="就拿圆玄来简单举个例"><a href="#就拿圆玄来简单举个例" class="headerlink" title="就拿圆玄来简单举个例"></a>就拿圆玄来简单举个例</h3><p><a target="_blank" rel="noopener" href="https://www.huadu.gov.cn/gzhdjy/attachment/7/7698/7698318/9675777.pdf">2024的预算文件中</a>标明圆玄中学2024年度总收入/支出为8755.6万元。以2200学生(平均数)来代入，其中教育支出 (205)6,543.40占比74.7%，住房保障支出 (221)2,212.20占比25.3%。往下细分：</p>
 <ul>
 <li><p>83.5% 用于人员工资福利（7,308.79 万元）</p>
@@ -285,18 +615,13 @@
 <p>  <strong>再剥到教学层面</strong></p>
 <p>教育支出 6,543.40 万元（占总预算 74.7%），其中：</p>
 <ul>
-<li><p>82.1% 用于人员工资福利（5,372.52 万元）——教师基本工资、津贴补贴、奖金、绩效工资、养老保险、职业年金，以及临聘教师工资</p>
-</li>
-<li><p>16.6% 用于商品和服务支出（1,088.91 万元）——办公费、印刷费、水电费、物业管理费、维修费、培训费、劳务费、工会经费、学生住宿费、教学业务费</p>
-</li>
-<li><p>对个人和家庭的补助支出（助学金）4.68 万元</p>
-</li>
-<li><p>资本性支出（办公设备购置）仅 1.2%（77.29 万元）</p>
-</li>
-<li><p>生均教育投入约 <strong>2.97 万元/年</strong>，其中直接用于教学业务（培训+印刷+材料+劳务）<strong>仅 1,626 元</strong>，折合每月 135 元</p>
-<p>  暂且抛开细节不谈(税收补贴，义务教育政策，场地费，初高中分层，教师工资分层，重点班，体艺特长生…….这怕是抛的有点多噢)，综上所述，由题可得，<strong>只需135人民币就可以让您的孩子在花都区政府旁明亮宽敞的教室里被九个要么20+教龄要么top师范研究生博士生的老师不停灌输知识整整二十天，一百二十个小时。</strong>话说前段时间的生育补贴多少钱来着？每孩每月300，领三年，妈的还有得找给你，对不起错怪你了呜呜呜呜呜呜，伟大无需多言。</p>
-</li>
+<li>82.1% 用于人员工资福利（5,372.52 万元）——教师基本工资、津贴补贴、奖金、绩效工资、养老保险、职业年金，以及临聘教师工资</li>
+<li>16.6% 用于商品和服务支出（1,088.91 万元）——办公费、印刷费、水电费、物业管理费、维修费、培训费、劳务费、工会经费、学生住宿费、教学业务费</li>
+<li>对个人和家庭的补助支出（助学金）4.68 万元</li>
+<li>资本性支出（办公设备购置）仅 1.2%（77.29 万元）</li>
+<li>生均教育投入约 <strong>2.97 万元/年</strong>，其中直接用于教学业务（培训+印刷+材料+劳务）<strong>仅 1,626 元</strong>，折合每月 135 元</li>
 </ul>
+<p>​    暂且抛开细节不谈(税收补贴，义务教育政策，场地费，初高中分层，教师工资分层，重点班，体艺特长生…….这怕是抛的有点多噢)，综上所述，由题可得，<strong>只需135人民币就可以让您的孩子在花都区政府旁明亮宽敞的教室里被九个要么20+教龄要么top师范研究生博士生的老师不停灌输知识整整二十天，一百二十个小时。</strong>话说前段时间的生育补贴多少钱来着？每孩每月300，领三年，妈的还有得找给你，对不起错怪你了呜呜呜呜呜呜，伟大无需多言。</p>
 <h3 id="目光转向学而思"><a href="#目光转向学而思" class="headerlink" title="目光转向学而思"></a>目光转向学而思</h3><p>由deepseekV4Pro检索到的信息可得</p>
 <p>以好未来（TAL Education，学而思母公司）为例，FY2024 财年（截至 2024 年 2 月 29 日）：</p>
 <ul>
@@ -326,34 +651,22 @@
 <p>我高中想让孩子上秀外，或者矿中，周末不会的去卓越找个一对一补补，或者放学有时间丢去雅美佳写写作业，得有人盯….<br>哎屌你咩鸡掰，你系味花都噶，想读书先规划好啊嘛！<br>额…. 我看了一下他的成绩，物理这块刚学的，学校教有点跟不上，我想周末….<br>规划好啊！<br>我….正在规划啊….<br>唉，真的想弄死你了，公办！民办！选哪个！<br>……</p>
 <p>今时今日这样的服务态度是有问题的！但不管怎么说，按照上面这种逻辑，成绩这种缺了就补，懂了就培优的玩意，应该就像左脚踩右脚飞天的故事一样美好，甚至好得有点不切实际。</p>
 <hr>
-<h3 id="分岔路"><a href="#分岔路" class="headerlink" title="分岔路"></a>分岔路</h3><pre><code>但是，只要稍微把目光拉远二十天，也就是高考出分那天，有意思的就来了**，你得选专业了**，认知高点的家庭能再往前看三四年，**你得选方向就业了**。
-
-从花都到 C9，从县一中到 985，不管怎么走过来的，你现在坐在这了。
-
-有这么一条路，你这三四年努努力，刷个好点的绩点，最好能进个实验室什么的，在三年后的春招秋上，锚定某个互联网大厂的技术岗，92毕业的，工资加房补加股票什么的一年税前能有40w，你知道这可不是笔小数目，总部就在深圳市南山区的某个写字楼(最近搬去岛上了)，进去从码农做起，先三五人一组弄个小作业，这对于你来说有点挑战，但问题不大，接着是轮岗，日报周报月报年报，偶尔加加班，日子不说过得多滋润，但也比你的大多数同学舒服了，熬了一两年后，很幸运的你的领导和你都还在那个位置上，你也渐渐开始带点新人，当然了你的工资也有了肉眼可见的提升，跟随你的病历单一起。终于有一天，单身的你意识到，钱只是钱，你躺在床上开始思考人生意义，就像上班后的每一个晚上一样，吞了片褪黑素后，你逐渐昏迷过去。睡吧，明天还有早会呢。
-
-这是互联网寒冬前92计算机工科专业的日子，听着不错，但现在是2026，灵活就业占就业人口比例44%，ai迭代速度比你老爸脑子热投资股票的速度还快，&quot;同济土木也是同济&quot;在向&quot;同济土木也是土木&quot;转型，大一开始准备考公考编考研成为越来越多家庭的选择，对教育和未来稳定的投资永远不过时....
-
-或者还有这么一条路，一般是这样开口的：兄弟兄弟我这里有个来钱快的正经路子，非92不要，刚刚好你考上了，又刚刚好上班内容就是你最擅长的东西：英语，什么你数学好？也行，随便吧，你学生证毕业证给我看看，你说巧不巧。(前任姐：是的，有什么跟我的保底年薪30w做三休四说去吧)，这条路走起来也比较简单，拿着你的92文凭去机构面试，排课，念PPT，收费，底薪加提成，下一个。不涉及梦想，不涉及成长，不涉及&quot;学到了什么&quot;。教培进来第一天你就知道你出去的时候不会比进来的时候多任何东西，除了银行卡余额。
-
-把话说的直白点：
-
-如果你是92，无论专业，你会发现时间成本最低的办法就是拿着学校的名号，去各大机构念ppt，毕业收入跟计算机大厂开发中期(代表版本红利，上一个是土木)持平或者略低。那么现在就只有一个问题了：我该如何上985呢？到这里，所有的所有完成了闭环，你要做的仅仅是把&quot;我怎么考上来的&quot;这件事，反复讲给下一批想考上去的人听。需要注意这是很平静的叙事而不是嘲讽。
-
-众所周知一个健康的生态系统是要保证生产者消费者分解者平衡的，至少看上去平衡，总得有人播种施肥，有人交易，有人收尸。如果一个系统内的生产者数量远小于分解者，甚至系统就是以分解者主导的(经济层面)，那事情就变得有意思了，而又一个众所周知的点是：计划经济是计划不出飞机杯的。
-
-那为什么需要在外面开个机构什么的去培训呢？**不知道，也不想知道，做生意讲供求，有人买就有人卖啊，你学不会不是一样要找人问，我有去叫他们报班吗？我没有，又不是我去逼他们考公考编考研的！我没有呀！关我什么事！根本是他们自己要考，是他们自己的选择关我什么事！**--《门徒》
-
-135公办和800的私立说到底都是定价，通篇讲了这么多也只是报班的和讲课的在书桌上拉拉扯扯，但接下来，为这一切付费的人即将登场。</code></pre>
-<h2 id="望父成龙"><a href="#望父成龙" class="headerlink" title="望父成龙"></a>望父成龙</h2><h3 id="序"><a href="#序" class="headerlink" title="序"></a>序</h3><pre><code>用尽手段去复刻一个成功的自己和用尽手段避开失败的自己本质上都是自卑心理作祟，中国家长们(改开一代)或多或少都开始意识到，现在的成功可能跟自身关系并不大，但为了面子或者其他虚头八脑的东西，他们总在抛开时代背景的前提下大谈努力，这不是什么宏大叙事，若非所谓命运的庇护，他们早就没了，战争，文革，饥荒，严打不过是一百年内或者说一代人身上发生的事情，但凡走错一步，现在在教室里侃大山的就不是这批师生，但他们总是避重就轻，且从不在意。
-
-如果成功能被建模，我目前认为的模型大概是&quot;时代*努力=成功&quot;，而父辈一直遵循的是&quot;努力=成功&quot;，好点的是&quot;努力+时代=成功&quot;。但过分的去强调人定胜天，不尊重客观规律的刻板行为之一就是对后代近乎魔性的掌控欲。还是那句话，想要活出较为松弛，简单，甚至新潮的人生最好办法并不是流程化的&quot;控制&quot;，而是简单的&quot;影响&quot;，但很明显，这在大陆或者东南亚不是世俗意义上的&quot;成功&quot;，甚至极端到&quot;松弛感&quot;在大部分场景下已成为贬义词。一把尺子量所有人，那他妈大家就都别想休息了。</code></pre>
+<h3 id="分岔路"><a href="#分岔路" class="headerlink" title="分岔路"></a>分岔路</h3><p>​    但是，只要稍微把目光拉远二十天，也就是高考出分那天，有意思的就来了<strong>，你得选专业了</strong>，认知高点的家庭能再往前看三四年，<strong>你得选方向就业了</strong>。</p>
+<p>​    从花都到 C9，从县一中到 985，不管怎么走过来的，你现在坐在这了。</p>
+<p>​    有这么一条路，你这三四年努努力，刷个好点的绩点，最好能进个实验室什么的，在三年后的春招秋上，锚定某个互联网大厂的技术岗，92毕业的，工资加房补加股票什么的一年税前能有40w，你知道这可不是笔小数目，总部就在深圳市南山区的某个写字楼(最近搬去岛上了)，进去从码农做起，先三五人一组弄个小作业，这对于你来说有点挑战，但问题不大，接着是轮岗，日报周报月报年报，偶尔加加班，日子不说过得多滋润，但也比你的大多数同学舒服了，熬了一两年后，很幸运的你的领导和你都还在那个位置上，你也渐渐开始带点新人，当然了你的工资也有了肉眼可见的提升，跟随你的病历单一起。终于有一天，单身的你意识到，钱只是钱，你躺在床上开始思考人生意义，就像上班后的每一个晚上一样，吞了片褪黑素后，你逐渐昏迷过去。睡吧，明天还有早会呢。</p>
+<p>​    这是互联网寒冬前92计算机工科专业的日子，听着不错，但现在是2026，灵活就业占就业人口比例44%，ai迭代速度比你老爸脑子热投资股票的速度还快，”同济土木也是同济”在向”同济土木也是土木”转型，大一开始准备考公考编考研成为越来越多家庭的选择，对教育和未来稳定的投资永远不过时….</p>
+<p>​    或者还有这么一条路，一般是这样开口的：兄弟兄弟我这里有个来钱快的正经路子，非92不要，刚刚好你考上了，又刚刚好上班内容就是你最擅长的东西：英语，什么你数学好？也行，随便吧，你学生证毕业证给我看看，你说巧不巧。(前任姐：是的，有什么跟我的保底年薪30w做三休四说去吧)，这条路走起来也比较简单，拿着你的92文凭去机构面试，排课，念PPT，收费，底薪加提成，下一个。不涉及梦想，不涉及成长，不涉及”学到了什么”。教培进来第一天你就知道你出去的时候不会比进来的时候多任何东西，除了银行卡余额。</p>
+<p>​    把话说的直白点：</p>
+<p>​    如果你是92，无论专业，你会发现时间成本最低的办法就是拿着学校的名号，去各大机构念ppt，毕业收入跟计算机大厂开发中期(代表版本红利，上一个是土木)持平或者略低。那么现在就只有一个问题了：我该如何上985呢？到这里，所有的所有完成了闭环，你要做的仅仅是把”我怎么考上来的”这件事，反复讲给下一批想考上去的人听。需要注意这是很平静的叙事而不是嘲讽。</p>
+<p>​    众所周知一个健康的生态系统是要保证生产者消费者分解者平衡的，至少看上去平衡，总得有人播种施肥，有人交易，有人收尸。如果一个系统内的生产者数量远小于分解者，甚至系统就是以分解者主导的(经济层面)，那事情就变得有意思了，而又一个众所周知的点是：计划经济是计划不出飞机杯的。</p>
+<p>​    那为什么需要在外面开个机构什么的去培训呢？<strong>不知道，也不想知道，做生意讲供求，有人买就有人卖啊，你学不会不是一样要找人问，我有去叫他们报班吗？我没有，又不是我去逼他们考公考编考研的！我没有呀！关我什么事！根本是他们自己要考，是他们自己的选择关我什么事！</strong>–《门徒》</p>
+<p>​    135公办和800的私立说到底都是定价，通篇讲了这么多也只是报班的和讲课的在书桌上拉拉扯扯，但接下来，为这一切付费的人即将登场。</p>
+<h2 id="望父成龙"><a href="#望父成龙" class="headerlink" title="望父成龙"></a>望父成龙</h2><h3 id="序"><a href="#序" class="headerlink" title="序"></a>序</h3><p>​    用尽手段去复刻一个成功的自己和用尽手段避开失败的自己本质上都是自卑心理作祟，中国家长们(改开一代)或多或少都开始意识到，现在的成功可能跟自身关系并不大，但为了面子或者其他虚头八脑的东西，他们总在抛开时代背景的前提下大谈努力，这不是什么宏大叙事，若非所谓命运的庇护，他们早就没了，战争，文革，饥荒，严打不过是一百年内或者说一代人身上发生的事情，但凡走错一步，现在在教室里侃大山的就不是这批师生，但他们总是避重就轻，且从不在意。</p>
+<p>​    如果成功能被建模，我目前认为的模型大概是”时代*努力=成功”，而父辈一直遵循的是”努力=成功”，好点的是”努力+时代=成功”。但过分的去强调人定胜天，不尊重客观规律的刻板行为之一就是对后代近乎魔性的掌控欲。还是那句话，想要活出较为松弛，简单，甚至新潮的人生最好办法并不是流程化的”控制”，而是简单的”影响”，但很明显，这在大陆或者东南亚不是世俗意义上的”成功”，甚至极端到”松弛感”在大部分场景下已成为贬义词。一把尺子量所有人，那他妈大家就都别想休息了。</p>
 <hr>
-<h3 id="原生家庭の痛"><a href="#原生家庭の痛" class="headerlink" title="原生家庭の痛"></a>原生家庭の痛</h3><pre><code>我身边有很努力的人，当然也有聪明人，但就是没有天才。在进入教培这段时间里我观察到一个现象：高低学历，高低收入的不同父母看到不同的广告选择机构学习同样知识。由此可以看出大家对于下一代教育的认知是一样的。像种菜一样把孩子丢来补习班，然后等收成，美其名曰：同步发展，但这并不是培养。
-
-工薪阶级总想着赚钱去投资下一代，然后十八年后孩子开始给家庭社会创造经济，也就是所谓的&quot;回本&quot;，但从经济学角度来说，这很明显是高风险投资，就算是最低级别的止损--持有到十八岁就立马抛出去，基本衣食住行和教育投入也不是一笔小数目，但如果只满足这些，又很容易被&quot;开了智&quot;的娃娃们挂小红书，而就实际情况来看，一部分投资者依旧冲着止盈去，大部队还是认为**重仓教育**这条路是对的，是可取的，是公理，是共识，只是你花的多我花的少，你主科全部一对一周末编程奥数拉满，我咬咬牙也能去卓越上个大班，大家量力而行。
-
-所以一切的一切回到一个很空大但原始的问题：**为什么要读书？**</code></pre>
+<h3 id="原生家庭の痛"><a href="#原生家庭の痛" class="headerlink" title="原生家庭の痛"></a>原生家庭の痛</h3><p>​    我身边有很努力的人，当然也有聪明人，但就是没有天才。在进入教培这段时间里我观察到一个现象：高低学历，高低收入的不同父母看到不同的广告选择机构学习同样知识。由此可以看出大家对于下一代教育的认知是一样的。像种菜一样把孩子丢来补习班，然后等收成，美其名曰：同步发展，但这并不是培养。</p>
+<p>​    工薪阶级总想着赚钱去投资下一代，然后十八年后孩子开始给家庭社会创造经济，也就是所谓的”回本”，但从经济学角度来说，这很明显是高风险投资，就算是最低级别的止损–持有到十八岁就立马抛出去，基本衣食住行和教育投入也不是一笔小数目，但如果只满足这些，又很容易被”开了智”的娃娃们挂小红书，而就实际情况来看，一部分投资者依旧冲着止盈去，大部队还是认为<strong>重仓教育</strong>这条路是对的，是可取的，是公理，是共识，只是你花的多我花的少，你主科全部一对一周末编程奥数拉满，我咬咬牙也能去卓越上个大班，大家量力而行。</p>
+<p>​    所以一切的一切回到一个很空大但原始的问题：<strong>为什么要读书？</strong></p>
 <h3 id="时代红利-个人能力"><a href="#时代红利-个人能力" class="headerlink" title="时代红利 != 个人能力"></a>时代红利 != 个人能力</h3><p>来看一组简单的表格，再次感谢deepseek帮我整理。</p>
 <p>PS：表格中时间跟实际可能略有差别，表格中经济含义由ai历史对话总结，不代表作者个人观点。</p>
 <hr>
@@ -543,62 +856,137 @@
 <td><strong>价格信号的最后一颗螺丝松了。</strong></td>
 </tr>
 </tbody></table>
-<pre><code>(碎碎念：有时候觉得表格数据什么的很有意思，你就把它摆在那，接下来要说的话要么是&quot;补充&quot;要么是&quot;解释&quot; ，正所谓解释即饰，吾岂不知？然学浅才疏，词不达意，冒昧申解，伏惟见谅。)
-
-由表不难看出，经济发展在国家层面存在两个主要历史节点，一是改革开放，二是中国加入WTO，这两个节点又贴得很巧合，不多不少，刚刚好22年--一个本科毕业生的培养周期。前有包分配制度兜底，后有经济大爆发，知乎er关于这批人的评价是&quot;70/80后城里的混得不好基本是猪&quot; ，字里行间充满着对那时的羡慕(抛开东北工人下岗潮，仅讨论华南地区)，从数据来看，也确实是那么回事， 无论是打工进体制创业做生意读书....都能赚钱，都能实现所谓人生价值，或者说都有兜底，只要你不在家躺着。
-
-从教育上来看，追学历在当时真的成为了一种选择，这也是前几年五五分流所追求的东西，而这种情况应该是一个结果，而不应该是一种政策。
-
-那段时间通往成功的路很多，努力就一定有回报是走得通的，肉眼可见的，可实现的，直白点说：**出生在1965到1985甚至到1990年的这批人吃到了人类历史(甚至不是中国历史)上最大规模的一次阶层跃迁。**他们吸取了之前的错误，拿到了时代的红利，也把应该属于下一代的蛋糕吃干抹净了。(不是哥们，什么叫我生下来这套房子就200万但这个市平均工资是4000)
-
-可笑的是，他们喜欢把自己吃到的肉归因于&quot;知识改变命运&quot;，并以此来鞭挞我们，没吃到肉的喝到了汤，汤都没喝到的隔着窗户闻到了味，这就导致了这批人对这条路产生了路径依赖，更可笑的是，时至今日，大陆不管是政治经济教育等等方面，不管体制内外，不管小家大家，都还是由这批人主导，这套规则伴随他们出生长大工作直至死亡，他们的存在就是上述公理最好的证明。(再写要杀头了)</code></pre>
+<p>​    (碎碎念：有时候觉得表格数据什么的很有意思，你就把它摆在那，接下来要说的话要么是”补充”要么是”解释” ，正所谓解释即饰，吾岂不知？然学浅才疏，词不达意，冒昧申解，伏惟见谅。)</p>
+<p>​    由表不难看出，经济发展在国家层面存在两个主要历史节点，一是改革开放，二是中国加入WTO，这两个节点又贴得很巧合，不多不少，刚刚好22年–一个本科毕业生的培养周期。前有包分配制度兜底，后有经济大爆发，知乎er关于这批人的评价是”70/80后城里的混得不好基本是猪” ，字里行间充满着对那时的羡慕(抛开东北工人下岗潮，仅讨论华南地区)，从数据来看，也确实是那么回事， 无论是打工进体制创业做生意读书….都能赚钱，都能实现所谓人生价值，或者说都有兜底，只要你不在家躺着。</p>
+<p>​    从教育上来看，追学历在当时真的成为了一种选择，这也是前几年五五分流所追求的东西，而这种情况应该是一个结果，而不应该是一种政策。</p>
+<p>​    那段时间通往成功的路很多，努力就一定有回报是走得通的，肉眼可见的，可实现的，直白点说：<strong>出生在1965到1985甚至到1990年的这批人吃到了人类历史(甚至不是中国历史)上最大规模的一次阶层跃迁。</strong>他们吸取了之前的错误，拿到了时代的红利，也把应该属于下一代的蛋糕吃干抹净了。(不是哥们，什么叫我生下来这套房子就200万但这个市平均工资是4000)</p>
+<p>​    可笑的是，他们喜欢把自己吃到的肉归因于”知识改变命运”，并以此来鞭挞我们，没吃到肉的喝到了汤，汤都没喝到的隔着窗户闻到了味，这就导致了这批人对这条路产生了路径依赖，更可笑的是，时至今日，大陆不管是政治经济教育等等方面，不管体制内外，不管小家大家，都还是由这批人主导，这套规则伴随他们出生长大工作直至死亡，他们的存在就是上述公理最好的证明。(再写要杀头了)</p>
 <hr>
-<pre><code>回到教育，我觉得家长们应该将投资的重心重新放回自己身上，好好的去想一想现在或者说这个社会以后的发展路线，是不是还是有那么一条成仙之路，不要再拿着文革末期的价格信号对二十一世纪的今天做决策。
+<p>​    回到教育，我觉得家长们应该将投资的重心重新放回自己身上，好好的去想一想现在或者说这个社会以后的发展路线，是不是还是有那么一条成仙之路，不要再拿着文革末期的价格信号对二十一世纪的今天做决策。</p>
+<p>​    就像当初我老爸毅然决然地离开家乡，离开全家都呆着红茂矿场(全家他妈的工人阶级在矿区在当时是什么概念)孤身一人跑去东莞石排画图纸，这是历史性的”高抛”，在那时，他的眼界和阅历无疑是领先于家里，领先他身边的人，甚至可能领先于时代的，他一定是看到了什么东西，窥见了那一丝丝的未来，才换来了换来了我如今的广州户口。</p>
+<p>​    在重新修正的人和时代的定位后，把教育的重心放给孩子，让教育只是教育。现在冻龄技术还不算成熟，脑机接口也还在开发，现在可以听你们的话，我们这代最大的特点就是听话，但<strong>你们之后，我们又该怎么办？</strong>这是每个家长(文革期)需要认真思考的问题。</p>
+<h2 id="不称职的天才"><a href="#不称职的天才" class="headerlink" title="不称职的天才"></a>不称职的天才</h2><p>​    这part我本来想扔上一篇写一起的，但思考了一下，单纯学生身份跟父母其实没什么关系，责任划分也不过是次责。作为学生来说，该做的不该做的有着大把的家规校规去罗列，在自主权上….不好意思，学生是没有这个东西的，我兄弟某次初中的考试奖励是自己房间的门锁，换锁之后还跟我炫耀过好长一段时间，我房间的木门上也还留不听话着被老妈砸出来坑洞。</p>
+<p>​    法律规定公民十六岁前是没有民事行为能力的，而实际上，大多数人直到23岁本科毕业工作离开家之后，才不得不开始学着自己去独立解决一件事情，我不想用”傀儡”等看上去像wx营销号常出现的词去概括，但大差不差。而单纯去谈论一个被控制的人的行为思想却又十分荒谬，我们一般管一个能被统一定价(最终学历)且有一定流通性的东西叫”商品”，在成为商品之前则是”原料”   。所以这也是起草这章纠结的点，要不要，能不能把”学生”<strong>单独</strong>拎出来讲?</p>
+<p>​    没有主体性的东西是不配上桌吃饭的，一个承担后果的人从头到尾没有决策权，而有决策权的人却又不用承担主要后果，所谓的自由和选择不过是在他们规定的方框内，那个机构，那个学校，那些老师同学，那本报考指南，把你当成死士去培养，年复一年的一分千人，过独木桥….然后呢？天才，把你当天才去培养，给你走天才的路，跟天才吃同样的饭，最后到底谁是天才，你？我？谁又说得清呢。</p>
+<h2 id="Drinking-on-till-the-Piss-Runs-Clear"><a href="#Drinking-on-till-the-Piss-Runs-Clear" class="headerlink" title="Drinking on till the Piss Runs Clear"></a>Drinking on till the Piss Runs Clear</h2><p>​    我不想大费周章的拆解一些“教育现状”，上一个在此领域大放异彩的四十没活到，甚至头七还没过完就被做成表情包cos国产火车头了，据我观察，在简中互联网上有并肩丁真牢大的趋势。这可是摸鱼日记啊！按照现目前我的规划来看，上班或者说打工唯一的意义就是搞钱，在能养活自己的基础上进行复利，而不是进行劳动力再生产(Reproductioncf Labor Power)，不产生可以留存的资本。</p>
+<p>​    综上所述，由题可得，显而易见。我每天的业务就从好好上班变成了睡饱吃好，将重复的工作尽量脚本化。在个人理财体系的地基搭建好后，那看不到头的未来从”去码头整点薯条”变成了”我要去马尔代夫某个没人的沙滩躺在沙发上左手精酿右手牛肉串着看夕阳什么都不想”，某个人会走出来拍拍我的肩膀“小龙啊，这几年辛苦你了，你可以好好休息了。”，接着再抛开这几年接收的所有社达理论，所有短视宣言，甚至撤掉朋友圈置顶的“明天不会更好”的文案。安心的在我的安全屋内等待”化债期”的过去。</p>
+<p>​    没来由的，我开始期待明天，后天，下一次SpaceX火箭升空的到来，我又开始对未来充满期待。我突然想到我在北兴读幼稚园那时，放学后坐在老爸的摩托车后座，山间的暖风在我脸上跑过，空气中有种奇怪的闷热，粘稠，以及带点土臭素的潮气，那是条笔直的V形山路，前看不到头，往后也看不到尾，我抱着老爸，发动机哼哧哼哧的闷响，我们穿过被树荫拉长的蝉鸣，声音忽高忽低，断断续续，车轮碾过落叶，这世界只剩下我们了。</p>
+<p>​    我很喜欢问他一些奇奇怪怪的科学问题，因为他们问我将来想成为什么的时候我选择了科学家，就在那个夏天的傍晚，在去九龙湖游泳的路上，一切都还没开始，一切都含苞待放。</p>
+<p>​    在等待的过程中，我的要做的重要的有且只有一件事，就像标题所说的–<strong>多喝温水❤️。</strong></p>
 
-就像当初我老爸毅然决然地离开家乡，离开全家都呆着红茂矿场(全家他妈的工人阶级在矿区在当时是什么概念)孤身一人跑去东莞石排画图纸，这是历史性的&quot;高抛&quot;，在那时，他的眼界和阅历无疑是领先于家里，领先他身边的人，甚至可能领先于时代的，他一定是看到了什么东西，窥见了那一丝丝的未来，才换来了换来了我如今的广州户口。
+        </div>
 
-在重新修正的人和时代的定位后，把教育的重心放给孩子，让教育只是教育。现在冻龄技术还不算成熟，脑机接口也还在开发，现在可以听你们的话，我们这代最大的特点就是听话，但**你们之后，我们又该怎么办？**这是每个家长(文革期)需要认真思考的问题。</code></pre>
-<h2 id="不称职的天才"><a href="#不称职的天才" class="headerlink" title="不称职的天才"></a>不称职的天才</h2><pre><code>这part我本来想扔上一篇写一起的，但思考了一下，单纯学生身份跟父母其实没什么关系，责任划分也不过是次责。作为学生来说，该做的不该做的有着大把的家规校规去罗列，在自主权上....不好意思，学生是没有这个东西的，我兄弟某次初中的考试奖励是自己房间的门锁，换锁之后还跟我炫耀过好长一段时间，我房间的木门上也还留不听话着被老妈砸出来坑洞。
+        
+        <div class="apple-card mt-12 p-6 flex items-center gap-4 reveal">
+          <span class="author-avatar" style="width:48px;height:48px;font-size:20px;">D</span>
+          <div>
+            <p class="font-semibold text-[#1d1d1f] text-sm">Dragon</p>
+            <p class="text-xs text-[#86868b] mt-0.5">专注底层架构与前端工程化。写代码，也写思考。</p>
+          </div>
+        </div>
+        
 
-法律规定公民十六岁前是没有民事行为能力的，而实际上，大多数人直到23岁本科毕业工作离开家之后，才不得不开始学着自己去独立解决一件事情，我不想用&quot;傀儡&quot;等看上去像wx营销号常出现的词去概括，但大差不差。而单纯去谈论一个被控制的人的行为思想却又十分荒谬，我们一般管一个能被统一定价(最终学历)且有一定流通性的东西叫&quot;商品&quot;，在成为商品之前则是&quot;原料&quot;   。所以这也是起草这章纠结的点，要不要，能不能把&quot;学生&quot;**单独**拎出来讲?
+        <div class="mt-12 flex justify-between text-sm reveal">
+          
+            <span></span>
+          
+          
+            <a href="/2026/04/05/%E6%9D%AD%E5%B7%9E%E6%B8%B8%E8%AE%B0/" class="group max-w-[45%] text-right">
+              <span class="text-xs text-[#86868b] block mb-1">下一篇 →</span>
+              <span class="text-[#1d1d1f] group-hover:text-[#86868b] transition-colors line-clamp-1">杭州游记</span>
+            </a>
+          
+        </div>
 
-没有主体性的东西是不配上桌吃饭的，一个承担后果的人从头到尾没有决策权，而有决策权的人却又不用承担主要后果，所谓的自由和选择不过是在他们规定的方框内，那个机构，那个学校，那些老师同学，那本报考指南，把你当成死士去培养，年复一年的一分千人，过独木桥....然后呢？天才，把你当天才去培养，给你走天才的路，跟天才吃同样的饭，最后到底谁是天才，你？我？谁又说得清呢。</code></pre>
-<h2 id="Drinking-on-till-the-Piss-Runs-Clear"><a href="#Drinking-on-till-the-Piss-Runs-Clear" class="headerlink" title="Drinking on till the Piss Runs Clear"></a>Drinking on till the Piss Runs Clear</h2><pre><code>我不想大费周章的拆解一些“教育现状”，上一个在此领域大放异彩的四十没活到，甚至头七还没过完就被做成表情包cos国产火车头了，据我观察，在简中互联网上有并肩丁真牢大的趋势。这可是摸鱼日记啊！按照现目前我的规划来看，上班或者说打工唯一的意义就是搞钱，在能养活自己的基础上进行复利，而不是进行劳动力再生产(Reproductioncf Labor Power)，不产生可以留存的资本。
-
-综上所述，由题可得，显而易见。我每天的业务就从好好上班变成了睡饱吃好，将重复的工作尽量脚本化。在个人理财体系的地基搭建好后，那看不到头的未来从&quot;去码头整点薯条&quot;变成了&quot;我要去马尔代夫某个没人的沙滩躺在沙发上左手精酿右手牛肉串着看夕阳什么都不想&quot;，某个人会走出来拍拍我的肩膀“小龙啊，这几年辛苦你了，你可以好好休息了。”，接着再抛开这几年接收的所有社达理论，所有短视宣言，甚至撤掉朋友圈置顶的“明天不会更好”的文案。安心的在我的安全屋内等待&quot;化债期&quot;的过去。
-
-没来由的，我开始期待明天，后天，下一次SpaceX火箭升空的到来，我又开始对未来充满期待。我突然想到我在北兴读幼稚园那时，放学后坐在老爸的摩托车后座，山间的暖风在我脸上跑过，空气中有种奇怪的闷热，粘稠，以及带点土臭素的潮气，那是条笔直的V形山路，前看不到头，往后也看不到尾，我抱着老爸，发动机哼哧哼哧的闷响，我们穿过被树荫拉长的蝉鸣，声音忽高忽低，断断续续，车轮碾过落叶，这世界只剩下我们了。
-
-我很喜欢问他一些奇奇怪怪的科学问题，因为他们问我将来想成为什么的时候我选择了科学家，就在那个夏天的傍晚，在去九龙湖游泳的路上，一切都还没开始，一切都含苞待放。
-
-在等待的过程中，我的要做的重要的有且只有一件事，就像标题所说的--**多喝温水❤️。**</code></pre>
-
-    </div>
-
-
-    
-    <div class="apple-card mt-12 p-6 flex items-center gap-4 reveal">
-      <span class="author-avatar" style="width:48px;height:48px;font-size:20px;">D</span>
-      <div>
-        <p class="font-semibold text-[#1d1d1f] text-sm">Dragon</p>
-        <p class="text-xs text-[#86868b] mt-0.5">专注底层架构与前端工程化。写代码，也写思考。</p>
       </div>
-    </div>
-    
-
-    <div class="mt-12 flex justify-between text-sm reveal">
-      
-        <span></span>
-      
-      
-        <a href="/2026/04/05/%E6%9D%AD%E5%B7%9E%E6%B8%B8%E8%AE%B0/" class="group max-w-[45%] text-right">
-          <span class="text-xs text-[#86868b] block mb-1">下一篇 →</span>
-          <span class="text-[#1d1d1f] group-hover:text-[#86868b] transition-colors line-clamp-1">杭州游记</span>
-        </a>
-      
     </div>
   </div>
 </article>
+
+
+<!-- TOC 滚动监听 + 平滑滚动 -->
+<script>
+(function() {
+  var tocLinks = document.querySelectorAll('#toc-nav .toc-link, #toc-nav-mobile .toc-link');
+  if (!tocLinks.length) return;
+
+  // 收集所有文章标题元素
+  var headings = [];
+  tocLinks.forEach(function(link) {
+    var href = link.getAttribute('href');
+    if (!href || href.charAt(0) !== '#') return;
+    var id = href.substring(1);
+    var el = document.getElementById(id);
+    if (el) {
+      headings.push({ id: id, el: el, links: [] });
+    }
+  });
+
+  // 为每个 heading 关联对应的 TOC 链接
+  tocLinks.forEach(function(link) {
+    var href = link.getAttribute('href');
+    if (!href || href.charAt(0) !== '#') return;
+    var id = href.substring(1);
+    headings.forEach(function(h) {
+      if (h.id === id) h.links.push(link);
+    });
+  });
+
+  if (!headings.length) return;
+
+  // 滚动高亮
+  var activeId = null;
+  function onScroll() {
+    var scrollTop = window.scrollY || document.documentElement.scrollTop;
+    var windowHeight = window.innerHeight;
+    var found = null;
+
+    for (var i = headings.length - 1; i >= 0; i--) {
+      var rect = headings[i].el.getBoundingClientRect();
+      // 标题顶部在视口上方 100px 以内则视为当前章节
+      if (rect.top <= 120) {
+        found = headings[i];
+        break;
+      }
+    }
+    if (!found && headings.length) found = headings[0];
+
+    if (found && found.id !== activeId) {
+      activeId = found.id;
+      // 移除所有 active
+      document.querySelectorAll('.toc-item.active').forEach(function(el) {
+        el.classList.remove('active');
+      });
+      // 高亮当前
+      found.links.forEach(function(link) {
+        var item = link.closest('.toc-item');
+        if (item) item.classList.add('active');
+      });
+    }
+  }
+
+  window.addEventListener('scroll', onScroll, { passive: true });
+  onScroll(); // 初始调用
+
+  // 点击平滑滚动
+  tocLinks.forEach(function(link) {
+    link.addEventListener('click', function(e) {
+      e.preventDefault();
+      var href = link.getAttribute('href');
+      if (!href || href.charAt(0) !== '#') return;
+      var target = document.getElementById(href.substring(1));
+      if (target) {
+        var top = target.getBoundingClientRect().top + window.scrollY - 100;
+        window.scrollTo({ top: top, behavior: 'smooth' });
+        // 关闭移动端大纲
+        var details = document.getElementById('toc-mobile');
+        if (details) details.removeAttribute('open');
+      }
+    });
+  });
+})();
+</script>
+
 
   </main>
 
@@ -630,24 +1018,78 @@
 
   
 <script>
-  document.addEventListener('DOMContentLoaded', () => {
-    const observer = new IntersectionObserver((entries, obs) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          entry.target.classList.add('active');
-          obs.unobserve(entry.target);
+  (function() {
+    var threshold = 0.15;
+
+    function isInViewport(el) {
+      var rect = el.getBoundingClientRect();
+      var windowHeight = window.innerHeight || document.documentElement.clientHeight;
+      // 元素的 visible 高度
+      var visibleHeight = Math.max(0, Math.min(rect.bottom, windowHeight) - Math.max(rect.top, 0));
+      var elementHeight = rect.height || 1;
+      return (visibleHeight / elementHeight) >= threshold;
+    }
+
+    function activate(el) {
+      if (!el.classList.contains('active')) {
+        el.classList.add('active');
+      }
+    }
+
+    function init() {
+      var revealEls = document.querySelectorAll('.reveal');
+      if (!revealEls.length) return;
+
+      // 1) 立即激活已在视口内的元素
+      revealEls.forEach(function(el) {
+        if (isInViewport(el)) {
+          activate(el);
         }
       });
-    }, {
-      root: null,
-      rootMargin: '0px',
-      threshold: 0.15
-    });
-    document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
-  });
+
+      // 2) 视口外的元素用 IntersectionObserver 监听
+      var observer = new IntersectionObserver(function(entries, obs) {
+        entries.forEach(function(entry) {
+          if (entry.isIntersecting) {
+            activate(entry.target);
+            obs.unobserve(entry.target);
+          }
+        });
+      }, {
+        root: null,
+        rootMargin: '0px',
+        threshold: threshold
+      });
+
+      revealEls.forEach(function(el) {
+        if (!el.classList.contains('active')) {
+          observer.observe(el);
+        }
+      });
+
+      // 3) 安全兜底：2 秒后强制显示所有仍未激活的元素
+      setTimeout(function() {
+        document.querySelectorAll('.reveal:not(.active)').forEach(function(el) {
+          el.classList.add('active');
+        });
+      }, 2000);
+    }
+
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', init);
+    } else {
+      init();
+    }
+  })();
 </script>
 
 
+
+  <noscript>
+    <style>
+      .reveal { opacity: 1 !important; transform: none !important; }
+    </style>
+  </noscript>
 
   
   <script>
