@@ -8,7 +8,9 @@
   <!-- 防闪烁：在任何 CSS/内容渲染前应用 dark 类 -->
   <script>
     (function() {
-      var s = localStorage.getItem('theme-preference');
+      document.documentElement.classList.add('js');
+      var s = null;
+      try { s = localStorage.getItem('theme-preference'); } catch (e) {}
       if (s === 'dark' || (!s && window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
         document.documentElement.classList.add('dark');
       }
@@ -102,11 +104,7 @@
     ::-webkit-scrollbar-thumb { background-color: var(--c-scrollbar-thumb); border-radius: 20px; border: 3px solid var(--c-scrollbar-track); }
 
     /* ═══════════ 滚动动画 ═══════════ */
-    .reveal {
-      opacity: 0;
-      transform: translateY(40px);
-      transition: all 1.2s cubic-bezier(0.16, 1, 0.3, 1);
-    }
+    .js .reveal { opacity: 0; transform: translateY(40px); transition: opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1), transform 0.7s cubic-bezier(0.16, 1, 0.3, 1); }
     .reveal.active { opacity: 1; transform: translateY(0); }
     noscript .reveal,
     .reveal.force-visible { opacity: 1; transform: translateY(0); }
@@ -476,6 +474,18 @@
       
     </div>
     <div class="flex items-center gap-2">
+      <details class="relative md:hidden">
+        <summary class="list-none w-9 h-9 flex items-center justify-center cursor-pointer rounded-full hover:bg-black/5" aria-label="打开导航菜单">☰</summary>
+        <div class="absolute right-0 top-11 min-w-32 p-2 rounded-xl border shadow-lg" style="background:var(--c-bg-alt);border-color:var(--c-border);">
+          
+            <a href="/" class="block px-3 py-2 rounded-lg hover:bg-black/5">概览</a>
+          
+            <a href="/archives" class="block px-3 py-2 rounded-lg hover:bg-black/5">文章</a>
+          
+            <a href="/categories" class="block px-3 py-2 rounded-lg hover:bg-black/5">分类</a>
+          
+        </div>
+      </details>
       <!-- 暗色模式切换 -->
       <button id="theme-toggle" aria-label="切换暗色模式" title="切换暗色模式">
         <!-- 月亮图标（亮色模式显示） -->
@@ -514,17 +524,19 @@
       var isDark = html.classList.contains('dark');
       if (isDark) {
         html.classList.remove('dark');
-        localStorage.setItem(KEY, 'light');
+        try { localStorage.setItem(KEY, 'light'); } catch (e) {}
       } else {
         html.classList.add('dark');
-        localStorage.setItem(KEY, 'dark');
+        try { localStorage.setItem(KEY, 'dark'); } catch (e) {}
       }
     });
 
     // 系统主题变化时跟随（仅当用户未曾手动设置时）
     if (window.matchMedia) {
       window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', function(e) {
-        if (!localStorage.getItem(KEY)) {
+        var saved = null;
+        try { saved = localStorage.getItem(KEY); } catch (e) {}
+        if (!saved) {
           if (e.matches) html.classList.add('dark');
           else html.classList.remove('dark');
         }
@@ -574,7 +586,7 @@
             <span>·</span>
             <span>14631 字</span>
             <span>·</span>
-            <span>49 分钟阅读</span>
+            <span>43 分钟阅读</span>
           </div>
         </header>
 
@@ -899,11 +911,11 @@
       if (!href || href.charAt(0) !== '#') return;
       var target = document.getElementById(href.substring(1));
       if (target) {
-        var top = target.getBoundingClientRect().top + window.scrollY - 100;
-        window.scrollTo({ top: top, behavior: 'smooth' });
         // 关闭移动端大纲
         var details = document.getElementById('toc-mobile');
         if (details) details.removeAttribute('open');
+        var top = target.getBoundingClientRect().top + window.scrollY - 100;
+        window.scrollTo({ top: top, behavior: 'smooth' });
       }
     });
   });
@@ -1019,7 +1031,7 @@
     (function() {
       var btn = document.createElement('button');
       btn.innerHTML = '&#8593;';
-      btn.setAttribute('aria-label', '返回首页');
+      btn.setAttribute('aria-label', '返回顶部');
       btn.style.cssText = 'position:fixed;bottom:32px;right:32px;z-index:50;width:44px;height:44px;border-radius:50%;background:#1d1d1f;color:#fff;font-size:20px;cursor:pointer;border:none;box-shadow:0 4px 16px rgba(0,0,0,0.12);opacity:0;transition:opacity 0.3s;pointer-events:none;';
       document.body.appendChild(btn);
       window.addEventListener('scroll', function() {
@@ -1028,6 +1040,9 @@
       });
       btn.addEventListener('click', function() {
         window.scrollTo({ top: 0, behavior: 'smooth' });
+      });
+      btn.addEventListener('keydown', function(event) {
+        if (event.key === 'Escape') btn.blur();
       });
     })();
   </script>

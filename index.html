@@ -8,7 +8,9 @@
   <!-- 防闪烁：在任何 CSS/内容渲染前应用 dark 类 -->
   <script>
     (function() {
-      var s = localStorage.getItem('theme-preference');
+      document.documentElement.classList.add('js');
+      var s = null;
+      try { s = localStorage.getItem('theme-preference'); } catch (e) {}
       if (s === 'dark' || (!s && window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
         document.documentElement.classList.add('dark');
       }
@@ -102,11 +104,7 @@
     ::-webkit-scrollbar-thumb { background-color: var(--c-scrollbar-thumb); border-radius: 20px; border: 3px solid var(--c-scrollbar-track); }
 
     /* ═══════════ 滚动动画 ═══════════ */
-    .reveal {
-      opacity: 0;
-      transform: translateY(40px);
-      transition: all 1.2s cubic-bezier(0.16, 1, 0.3, 1);
-    }
+    .js .reveal { opacity: 0; transform: translateY(40px); transition: opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1), transform 0.7s cubic-bezier(0.16, 1, 0.3, 1); }
     .reveal.active { opacity: 1; transform: translateY(0); }
     noscript .reveal,
     .reveal.force-visible { opacity: 1; transform: translateY(0); }
@@ -476,6 +474,18 @@
       
     </div>
     <div class="flex items-center gap-2">
+      <details class="relative md:hidden">
+        <summary class="list-none w-9 h-9 flex items-center justify-center cursor-pointer rounded-full hover:bg-black/5" aria-label="打开导航菜单">☰</summary>
+        <div class="absolute right-0 top-11 min-w-32 p-2 rounded-xl border shadow-lg" style="background:var(--c-bg-alt);border-color:var(--c-border);">
+          
+            <a href="/" class="block px-3 py-2 rounded-lg hover:bg-black/5">概览</a>
+          
+            <a href="/archives" class="block px-3 py-2 rounded-lg hover:bg-black/5">文章</a>
+          
+            <a href="/categories" class="block px-3 py-2 rounded-lg hover:bg-black/5">分类</a>
+          
+        </div>
+      </details>
       <!-- 暗色模式切换 -->
       <button id="theme-toggle" aria-label="切换暗色模式" title="切换暗色模式">
         <!-- 月亮图标（亮色模式显示） -->
@@ -514,17 +524,19 @@
       var isDark = html.classList.contains('dark');
       if (isDark) {
         html.classList.remove('dark');
-        localStorage.setItem(KEY, 'light');
+        try { localStorage.setItem(KEY, 'light'); } catch (e) {}
       } else {
         html.classList.add('dark');
-        localStorage.setItem(KEY, 'dark');
+        try { localStorage.setItem(KEY, 'dark'); } catch (e) {}
       }
     });
 
     // 系统主题变化时跟随（仅当用户未曾手动设置时）
     if (window.matchMedia) {
       window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', function(e) {
-        if (!localStorage.getItem(KEY)) {
+        var saved = null;
+        try { saved = localStorage.getItem(KEY); } catch (e) {}
+        if (!saved) {
           if (e.matches) html.classList.add('dark');
           else html.classList.remove('dark');
         }
@@ -559,20 +571,19 @@
     <div class="flex flex-wrap justify-center gap-2 mb-12 bg-white p-1 rounded-full inline-flex shadow-sm border border-gray-100" id="filter-container">
       <button class="filter-btn active" data-filter="all">全部</button>
       <button class="filter-btn" data-filter="featured">精选</button>
-      <button class="filter-btn" data-filter="年度总结">年度总结</button>
-      <button class="filter-btn" data-filter="生活随笔">生活随笔</button>
-      <button class="filter-btn" data-filter="技术博客">技术博客</button>
+      
     </div>
   </div>
 
   <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="article-grid">
     
-    <article class="apple-card p-10 flex flex-col justify-between reveal cursor-pointer article-item
+    <article class="apple-card p-10 flex flex-col justify-between reveal article-item
       bg-[#1d1d1f] text-white"
       id="post-0"
-      onclick="window.location.href='/2023/07/12/5.30/'"
       data-category=""
+      data-categories=""
       data-sticky="true">
+      <a href="/2023/07/12/5.30/" class="block h-full focus:outline-none focus-visible:ring-2 focus-visible:ring-[#0066cc] rounded-2xl" aria-label="阅读文章：实习随笔">
       <div>
         <span class="text-white/50 text-xs font-semibold uppercase tracking-widest">
           ★ 精选
@@ -586,14 +597,16 @@
         <span class="text-white/50 text-xs font-medium">07月12日</span>
         <span class="bg-white/10 text-white w-8 h-8 rounded-full flex items-center justify-center font-bold text-lg">&#8599;</span>
       </div>
+      </a>
     </article>
     
-    <article class="apple-card p-10 flex flex-col justify-between reveal cursor-pointer article-item
+    <article class="apple-card p-10 flex flex-col justify-between reveal article-item
       "
       id="post-1"
-      onclick="window.location.href='/2026/04/11/%E6%91%B8%E9%B1%BC%E6%97%A5%E8%AE%B02.0/'"
       data-category=""
-      data-sticky="">
+      data-categories=""
+      data-sticky="false">
+      <a href="/2026/04/11/%E6%91%B8%E9%B1%BC%E6%97%A5%E8%AE%B02.0/" class="block h-full focus:outline-none focus-visible:ring-2 focus-visible:ring-[#0066cc] rounded-2xl" aria-label="阅读文章：摸鱼日记2.0">
       <div>
         <span class="text-[#86868b] text-xs font-semibold uppercase tracking-widest">
           文章
@@ -605,14 +618,16 @@
         <span class="text-[#86868b] text-xs font-medium">04月11日</span>
         <span class="bg-gray-100 text-gray-600 w-8 h-8 rounded-full flex items-center justify-center font-bold text-lg">&#8599;</span>
       </div>
+      </a>
     </article>
     
-    <article class="apple-card p-10 flex flex-col justify-between reveal cursor-pointer article-item
+    <article class="apple-card p-10 flex flex-col justify-between reveal article-item
       "
       id="post-2"
-      onclick="window.location.href='/2026/04/05/%E6%9D%AD%E5%B7%9E%E6%B8%B8%E8%AE%B0/'"
       data-category=""
-      data-sticky="">
+      data-categories=""
+      data-sticky="false">
+      <a href="/2026/04/05/%E6%9D%AD%E5%B7%9E%E6%B8%B8%E8%AE%B0/" class="block h-full focus:outline-none focus-visible:ring-2 focus-visible:ring-[#0066cc] rounded-2xl" aria-label="阅读文章：杭州游记">
       <div>
         <span class="text-[#86868b] text-xs font-semibold uppercase tracking-widest">
           文章
@@ -624,14 +639,16 @@
         <span class="text-[#86868b] text-xs font-medium">04月05日</span>
         <span class="bg-gray-100 text-gray-600 w-8 h-8 rounded-full flex items-center justify-center font-bold text-lg">&#8599;</span>
       </div>
+      </a>
     </article>
     
-    <article class="apple-card p-10 flex flex-col justify-between reveal cursor-pointer article-item
+    <article class="apple-card p-10 flex flex-col justify-between reveal article-item
       "
       id="post-3"
-      onclick="window.location.href='/2026/03/20/%E6%88%91%E4%BB%AC%E4%B8%80%E5%BF%83%E5%8F%AA%E6%83%B3%E7%9D%80%E8%83%9C%E5%88%A9/'"
       data-category=""
-      data-sticky="">
+      data-categories=""
+      data-sticky="false">
+      <a href="/2026/03/20/%E6%88%91%E4%BB%AC%E4%B8%80%E5%BF%83%E5%8F%AA%E6%83%B3%E7%9D%80%E8%83%9C%E5%88%A9/" class="block h-full focus:outline-none focus-visible:ring-2 focus-visible:ring-[#0066cc] rounded-2xl" aria-label="阅读文章：我们一心只想着胜利">
       <div>
         <span class="text-[#86868b] text-xs font-semibold uppercase tracking-widest">
           文章
@@ -645,14 +662,16 @@
         <span class="text-[#86868b] text-xs font-medium">03月20日</span>
         <span class="bg-gray-100 text-gray-600 w-8 h-8 rounded-full flex items-center justify-center font-bold text-lg">&#8599;</span>
       </div>
+      </a>
     </article>
     
-    <article class="apple-card p-10 flex flex-col justify-between reveal cursor-pointer article-item
+    <article class="apple-card p-10 flex flex-col justify-between reveal article-item
       "
       id="post-4"
-      onclick="window.location.href='/2025/12/31/2025%E5%B9%B4%E5%BA%A6%E6%80%BB%E7%BB%93/'"
       data-category=""
-      data-sticky="">
+      data-categories=""
+      data-sticky="false">
+      <a href="/2025/12/31/2025%E5%B9%B4%E5%BA%A6%E6%80%BB%E7%BB%93/" class="block h-full focus:outline-none focus-visible:ring-2 focus-visible:ring-[#0066cc] rounded-2xl" aria-label="阅读文章：2025年度总结">
       <div>
         <span class="text-[#86868b] text-xs font-semibold uppercase tracking-widest">
           文章
@@ -665,14 +684,16 @@
         <span class="text-[#86868b] text-xs font-medium">12月31日</span>
         <span class="bg-gray-100 text-gray-600 w-8 h-8 rounded-full flex items-center justify-center font-bold text-lg">&#8599;</span>
       </div>
+      </a>
     </article>
     
-    <article class="apple-card p-10 flex flex-col justify-between reveal cursor-pointer article-item
+    <article class="apple-card p-10 flex flex-col justify-between reveal article-item
       "
       id="post-5"
-      onclick="window.location.href='/2025/12/14/26gitbirthday/'"
       data-category=""
-      data-sticky="">
+      data-categories=""
+      data-sticky="false">
+      <a href="/2025/12/14/26gitbirthday/" class="block h-full focus:outline-none focus-visible:ring-2 focus-visible:ring-[#0066cc] rounded-2xl" aria-label="阅读文章：Git Birthday 2025">
       <div>
         <span class="text-[#86868b] text-xs font-semibold uppercase tracking-widest">
           文章
@@ -684,14 +705,16 @@
         <span class="text-[#86868b] text-xs font-medium">12月14日</span>
         <span class="bg-gray-100 text-gray-600 w-8 h-8 rounded-full flex items-center justify-center font-bold text-lg">&#8599;</span>
       </div>
+      </a>
     </article>
     
-    <article class="apple-card p-10 flex flex-col justify-between reveal cursor-pointer article-item
+    <article class="apple-card p-10 flex flex-col justify-between reveal article-item
       "
       id="post-6"
-      onclick="window.location.href='/2025/06/25/2025%E6%AF%95%E4%B8%9A/'"
       data-category=""
-      data-sticky="">
+      data-categories=""
+      data-sticky="false">
+      <a href="/2025/06/25/2025%E6%AF%95%E4%B8%9A/" class="block h-full focus:outline-none focus-visible:ring-2 focus-visible:ring-[#0066cc] rounded-2xl" aria-label="阅读文章：毕业快乐">
       <div>
         <span class="text-[#86868b] text-xs font-semibold uppercase tracking-widest">
           文章
@@ -703,14 +726,16 @@
         <span class="text-[#86868b] text-xs font-medium">06月25日</span>
         <span class="bg-gray-100 text-gray-600 w-8 h-8 rounded-full flex items-center justify-center font-bold text-lg">&#8599;</span>
       </div>
+      </a>
     </article>
     
-    <article class="apple-card p-10 flex flex-col justify-between reveal cursor-pointer article-item
+    <article class="apple-card p-10 flex flex-col justify-between reveal article-item
       "
       id="post-7"
-      onclick="window.location.href='/2025/05/10/5.1/'"
       data-category=""
-      data-sticky="">
+      data-categories=""
+      data-sticky="false">
+      <a href="/2025/05/10/5.1/" class="block h-full focus:outline-none focus-visible:ring-2 focus-visible:ring-[#0066cc] rounded-2xl" aria-label="阅读文章：五一随笔">
       <div>
         <span class="text-[#86868b] text-xs font-semibold uppercase tracking-widest">
           文章
@@ -723,14 +748,16 @@
         <span class="text-[#86868b] text-xs font-medium">05月10日</span>
         <span class="bg-gray-100 text-gray-600 w-8 h-8 rounded-full flex items-center justify-center font-bold text-lg">&#8599;</span>
       </div>
+      </a>
     </article>
     
-    <article class="apple-card p-10 flex flex-col justify-between reveal cursor-pointer article-item
+    <article class="apple-card p-10 flex flex-col justify-between reveal article-item
       "
       id="post-8"
-      onclick="window.location.href='/2025/01/18/%E7%8E%8B%E5%AE%B6%E5%8D%AB/'"
       data-category=""
-      data-sticky="">
+      data-categories=""
+      data-sticky="false">
+      <a href="/2025/01/18/%E7%8E%8B%E5%AE%B6%E5%8D%AB/" class="block h-full focus:outline-none focus-visible:ring-2 focus-visible:ring-[#0066cc] rounded-2xl" aria-label="阅读文章：记">
       <div>
         <span class="text-[#86868b] text-xs font-semibold uppercase tracking-widest">
           文章
@@ -743,14 +770,16 @@
         <span class="text-[#86868b] text-xs font-medium">01月18日</span>
         <span class="bg-gray-100 text-gray-600 w-8 h-8 rounded-full flex items-center justify-center font-bold text-lg">&#8599;</span>
       </div>
+      </a>
     </article>
     
-    <article class="apple-card p-10 flex flex-col justify-between reveal cursor-pointer article-item
+    <article class="apple-card p-10 flex flex-col justify-between reveal article-item
       "
       id="post-9"
-      onclick="window.location.href='/2025/01/18/%E4%B8%80%E8%BD%AE%E5%A4%8D%E4%B9%A0/'"
       data-category=""
-      data-sticky="">
+      data-categories=""
+      data-sticky="false">
+      <a href="/2025/01/18/%E4%B8%80%E8%BD%AE%E5%A4%8D%E4%B9%A0/" class="block h-full focus:outline-none focus-visible:ring-2 focus-visible:ring-[#0066cc] rounded-2xl" aria-label="阅读文章：一轮复习">
       <div>
         <span class="text-[#86868b] text-xs font-semibold uppercase tracking-widest">
           文章
@@ -762,14 +791,16 @@
         <span class="text-[#86868b] text-xs font-medium">01月18日</span>
         <span class="bg-gray-100 text-gray-600 w-8 h-8 rounded-full flex items-center justify-center font-bold text-lg">&#8599;</span>
       </div>
+      </a>
     </article>
     
-    <article class="apple-card p-10 flex flex-col justify-between reveal cursor-pointer article-item
+    <article class="apple-card p-10 flex flex-col justify-between reveal article-item
       "
       id="post-10"
-      onclick="window.location.href='/2025/01/18/Voice%20of%20April/'"
       data-category=""
-      data-sticky="">
+      data-categories=""
+      data-sticky="false">
+      <a href="/2025/01/18/Voice%20of%20April/" class="block h-full focus:outline-none focus-visible:ring-2 focus-visible:ring-[#0066cc] rounded-2xl" aria-label="阅读文章：Voice of April">
       <div>
         <span class="text-[#86868b] text-xs font-semibold uppercase tracking-widest">
           文章
@@ -782,14 +813,16 @@
         <span class="text-[#86868b] text-xs font-medium">01月18日</span>
         <span class="bg-gray-100 text-gray-600 w-8 h-8 rounded-full flex items-center justify-center font-bold text-lg">&#8599;</span>
       </div>
+      </a>
     </article>
     
-    <article class="apple-card p-10 flex flex-col justify-between reveal cursor-pointer article-item
+    <article class="apple-card p-10 flex flex-col justify-between reveal article-item
       "
       id="post-11"
-      onclick="window.location.href='/2025/01/18/hello-world/'"
       data-category=""
-      data-sticky="">
+      data-categories=""
+      data-sticky="false">
+      <a href="/2025/01/18/hello-world/" class="block h-full focus:outline-none focus-visible:ring-2 focus-visible:ring-[#0066cc] rounded-2xl" aria-label="阅读文章：Hello World">
       <div>
         <span class="text-[#86868b] text-xs font-semibold uppercase tracking-widest">
           文章
@@ -801,14 +834,16 @@
         <span class="text-[#86868b] text-xs font-medium">01月18日</span>
         <span class="bg-gray-100 text-gray-600 w-8 h-8 rounded-full flex items-center justify-center font-bold text-lg">&#8599;</span>
       </div>
+      </a>
     </article>
     
-    <article class="apple-card p-10 flex flex-col justify-between reveal cursor-pointer article-item
+    <article class="apple-card p-10 flex flex-col justify-between reveal article-item
       "
       id="post-12"
-      onclick="window.location.href='/2025/01/18/Git%20Birthday%20for%202025/'"
       data-category=""
-      data-sticky="">
+      data-categories=""
+      data-sticky="false">
+      <a href="/2025/01/18/Git%20Birthday%20for%202025/" class="block h-full focus:outline-none focus-visible:ring-2 focus-visible:ring-[#0066cc] rounded-2xl" aria-label="阅读文章：Git birthday for 2024">
       <div>
         <span class="text-[#86868b] text-xs font-semibold uppercase tracking-widest">
           文章
@@ -822,14 +857,16 @@ Git birthday，笑死，现在在程序猿这条路上渐行渐远了。
         <span class="text-[#86868b] text-xs font-medium">01月18日</span>
         <span class="bg-gray-100 text-gray-600 w-8 h-8 rounded-full flex items-center justify-center font-bold text-lg">&#8599;</span>
       </div>
+      </a>
     </article>
     
-    <article class="apple-card p-10 flex flex-col justify-between reveal cursor-pointer article-item
+    <article class="apple-card p-10 flex flex-col justify-between reveal article-item
       "
       id="post-13"
-      onclick="window.location.href='/2025/01/18/Cyberpunk%20Edgerunners/'"
       data-category=""
-      data-sticky="">
+      data-categories=""
+      data-sticky="false">
+      <a href="/2025/01/18/Cyberpunk%20Edgerunners/" class="block h-full focus:outline-none focus-visible:ring-2 focus-visible:ring-[#0066cc] rounded-2xl" aria-label="阅读文章：Cyberpunk Edgerunners">
       <div>
         <span class="text-[#86868b] text-xs font-semibold uppercase tracking-widest">
           文章
@@ -841,14 +878,16 @@ Git birthday，笑死，现在在程序猿这条路上渐行渐远了。
         <span class="text-[#86868b] text-xs font-medium">01月18日</span>
         <span class="bg-gray-100 text-gray-600 w-8 h-8 rounded-full flex items-center justify-center font-bold text-lg">&#8599;</span>
       </div>
+      </a>
     </article>
     
-    <article class="apple-card p-10 flex flex-col justify-between reveal cursor-pointer article-item
+    <article class="apple-card p-10 flex flex-col justify-between reveal article-item
       "
       id="post-14"
-      onclick="window.location.href='/2025/01/17/%E8%80%83%E7%A0%94/'"
       data-category=""
-      data-sticky="">
+      data-categories=""
+      data-sticky="false">
+      <a href="/2025/01/17/%E8%80%83%E7%A0%94/" class="block h-full focus:outline-none focus-visible:ring-2 focus-visible:ring-[#0066cc] rounded-2xl" aria-label="阅读文章：考研">
       <div>
         <span class="text-[#86868b] text-xs font-semibold uppercase tracking-widest">
           文章
@@ -860,14 +899,16 @@ Git birthday，笑死，现在在程序猿这条路上渐行渐远了。
         <span class="text-[#86868b] text-xs font-medium">01月17日</span>
         <span class="bg-gray-100 text-gray-600 w-8 h-8 rounded-full flex items-center justify-center font-bold text-lg">&#8599;</span>
       </div>
+      </a>
     </article>
     
-    <article class="apple-card p-10 flex flex-col justify-between reveal cursor-pointer article-item
+    <article class="apple-card p-10 flex flex-col justify-between reveal article-item
       "
       id="post-15"
-      onclick="window.location.href='/2025/01/10/2024%E5%B9%B4%E5%BA%A6%E6%80%BB%E7%BB%93/'"
       data-category=""
-      data-sticky="">
+      data-categories=""
+      data-sticky="false">
+      <a href="/2025/01/10/2024%E5%B9%B4%E5%BA%A6%E6%80%BB%E7%BB%93/" class="block h-full focus:outline-none focus-visible:ring-2 focus-visible:ring-[#0066cc] rounded-2xl" aria-label="阅读文章：2024年度总结">
       <div>
         <span class="text-[#86868b] text-xs font-semibold uppercase tracking-widest">
           文章
@@ -880,14 +921,16 @@ Git birthday，笑死，现在在程序猿这条路上渐行渐远了。
         <span class="text-[#86868b] text-xs font-medium">01月10日</span>
         <span class="bg-gray-100 text-gray-600 w-8 h-8 rounded-full flex items-center justify-center font-bold text-lg">&#8599;</span>
       </div>
+      </a>
     </article>
     
-    <article class="apple-card p-10 flex flex-col justify-between reveal cursor-pointer article-item
+    <article class="apple-card p-10 flex flex-col justify-between reveal article-item
       "
       id="post-16"
-      onclick="window.location.href='/2024/12/05/%E6%AF%95%E4%B8%9A%E9%9A%8F%E7%AC%94/'"
       data-category=""
-      data-sticky="">
+      data-categories=""
+      data-sticky="false">
+      <a href="/2024/12/05/%E6%AF%95%E4%B8%9A%E9%9A%8F%E7%AC%94/" class="block h-full focus:outline-none focus-visible:ring-2 focus-visible:ring-[#0066cc] rounded-2xl" aria-label="阅读文章：毕业照">
       <div>
         <span class="text-[#86868b] text-xs font-semibold uppercase tracking-widest">
           文章
@@ -900,14 +943,16 @@ Git birthday，笑死，现在在程序猿这条路上渐行渐远了。
         <span class="text-[#86868b] text-xs font-medium">12月05日</span>
         <span class="bg-gray-100 text-gray-600 w-8 h-8 rounded-full flex items-center justify-center font-bold text-lg">&#8599;</span>
       </div>
+      </a>
     </article>
     
-    <article class="apple-card p-10 flex flex-col justify-between reveal cursor-pointer article-item
+    <article class="apple-card p-10 flex flex-col justify-between reveal article-item
       "
       id="post-17"
-      onclick="window.location.href='/2024/04/26/%E7%94%9F%E6%97%A5%E5%BF%AB%E4%B9%90/'"
       data-category=""
-      data-sticky="">
+      data-categories=""
+      data-sticky="false">
+      <a href="/2024/04/26/%E7%94%9F%E6%97%A5%E5%BF%AB%E4%B9%90/" class="block h-full focus:outline-none focus-visible:ring-2 focus-visible:ring-[#0066cc] rounded-2xl" aria-label="阅读文章：生日快乐">
       <div>
         <span class="text-[#86868b] text-xs font-semibold uppercase tracking-widest">
           文章
@@ -919,14 +964,16 @@ Git birthday，笑死，现在在程序猿这条路上渐行渐远了。
         <span class="text-[#86868b] text-xs font-medium">04月26日</span>
         <span class="bg-gray-100 text-gray-600 w-8 h-8 rounded-full flex items-center justify-center font-bold text-lg">&#8599;</span>
       </div>
+      </a>
     </article>
     
-    <article class="apple-card p-10 flex flex-col justify-between reveal cursor-pointer article-item
+    <article class="apple-card p-10 flex flex-col justify-between reveal article-item
       "
       id="post-18"
-      onclick="window.location.href='/2023/12/12/2023%E5%B9%B4%E5%BA%A6%E6%80%BB%E7%BB%93/'"
       data-category=""
-      data-sticky="">
+      data-categories=""
+      data-sticky="false">
+      <a href="/2023/12/12/2023%E5%B9%B4%E5%BA%A6%E6%80%BB%E7%BB%93/" class="block h-full focus:outline-none focus-visible:ring-2 focus-visible:ring-[#0066cc] rounded-2xl" aria-label="阅读文章：2023年度总结">
       <div>
         <span class="text-[#86868b] text-xs font-semibold uppercase tracking-widest">
           文章
@@ -941,14 +988,16 @@ Git birthday，笑死，现在在程序猿这条路上渐行渐远了。
         <span class="text-[#86868b] text-xs font-medium">12月12日</span>
         <span class="bg-gray-100 text-gray-600 w-8 h-8 rounded-full flex items-center justify-center font-bold text-lg">&#8599;</span>
       </div>
+      </a>
     </article>
     
-    <article class="apple-card p-10 flex flex-col justify-between reveal cursor-pointer article-item
+    <article class="apple-card p-10 flex flex-col justify-between reveal article-item
       "
       id="post-19"
-      onclick="window.location.href='/2023/11/23/Git%20Birthday2023/'"
       data-category=""
-      data-sticky="">
+      data-categories=""
+      data-sticky="false">
+      <a href="/2023/11/23/Git%20Birthday2023/" class="block h-full focus:outline-none focus-visible:ring-2 focus-visible:ring-[#0066cc] rounded-2xl" aria-label="阅读文章：Git Birthday">
       <div>
         <span class="text-[#86868b] text-xs font-semibold uppercase tracking-widest">
           文章
@@ -961,14 +1010,16 @@ Git birthday，笑死，现在在程序猿这条路上渐行渐远了。
         <span class="text-[#86868b] text-xs font-medium">11月23日</span>
         <span class="bg-gray-100 text-gray-600 w-8 h-8 rounded-full flex items-center justify-center font-bold text-lg">&#8599;</span>
       </div>
+      </a>
     </article>
     
-    <article class="apple-card p-10 flex flex-col justify-between reveal cursor-pointer article-item
+    <article class="apple-card p-10 flex flex-col justify-between reveal article-item
       "
       id="post-20"
-      onclick="window.location.href='/2023/10/26/%E6%97%A0%E9%A2%98/'"
       data-category=""
-      data-sticky="">
+      data-categories=""
+      data-sticky="false">
+      <a href="/2023/10/26/%E6%97%A0%E9%A2%98/" class="block h-full focus:outline-none focus-visible:ring-2 focus-visible:ring-[#0066cc] rounded-2xl" aria-label="阅读文章：重启">
       <div>
         <span class="text-[#86868b] text-xs font-semibold uppercase tracking-widest">
           文章
@@ -983,14 +1034,16 @@ Git birthday，笑死，现在在程序猿这条路上渐行渐远了。
         <span class="text-[#86868b] text-xs font-medium">10月26日</span>
         <span class="bg-gray-100 text-gray-600 w-8 h-8 rounded-full flex items-center justify-center font-bold text-lg">&#8599;</span>
       </div>
+      </a>
     </article>
     
-    <article class="apple-card p-10 flex flex-col justify-between reveal cursor-pointer article-item
+    <article class="apple-card p-10 flex flex-col justify-between reveal article-item
       "
       id="post-21"
-      onclick="window.location.href='/2023/09/06/%E4%B8%8A%E6%B5%B7%E6%B8%B8%E8%AE%B0/'"
       data-category=""
-      data-sticky="">
+      data-categories=""
+      data-sticky="false">
+      <a href="/2023/09/06/%E4%B8%8A%E6%B5%B7%E6%B8%B8%E8%AE%B0/" class="block h-full focus:outline-none focus-visible:ring-2 focus-visible:ring-[#0066cc] rounded-2xl" aria-label="阅读文章：上海游记">
       <div>
         <span class="text-[#86868b] text-xs font-semibold uppercase tracking-widest">
           文章
@@ -1003,14 +1056,16 @@ Git birthday，笑死，现在在程序猿这条路上渐行渐远了。
         <span class="text-[#86868b] text-xs font-medium">09月06日</span>
         <span class="bg-gray-100 text-gray-600 w-8 h-8 rounded-full flex items-center justify-center font-bold text-lg">&#8599;</span>
       </div>
+      </a>
     </article>
     
-    <article class="apple-card p-10 flex flex-col justify-between reveal cursor-pointer article-item
+    <article class="apple-card p-10 flex flex-col justify-between reveal article-item
       "
       id="post-22"
-      onclick="window.location.href='/2023/07/18/7.18/'"
       data-category=""
-      data-sticky="">
+      data-categories=""
+      data-sticky="false">
+      <a href="/2023/07/18/7.18/" class="block h-full focus:outline-none focus-visible:ring-2 focus-visible:ring-[#0066cc] rounded-2xl" aria-label="阅读文章：摸鱼日记">
       <div>
         <span class="text-[#86868b] text-xs font-semibold uppercase tracking-widest">
           文章
@@ -1023,14 +1078,16 @@ Git birthday，笑死，现在在程序猿这条路上渐行渐远了。
         <span class="text-[#86868b] text-xs font-medium">07月18日</span>
         <span class="bg-gray-100 text-gray-600 w-8 h-8 rounded-full flex items-center justify-center font-bold text-lg">&#8599;</span>
       </div>
+      </a>
     </article>
     
-    <article class="apple-card p-10 flex flex-col justify-between reveal cursor-pointer article-item
+    <article class="apple-card p-10 flex flex-col justify-between reveal article-item
       "
       id="post-23"
-      onclick="window.location.href='/2023/07/16/%E4%BA%BA%E7%94%9F%E9%87%8D%E5%90%AF%E8%AE%A1%E5%88%92/'"
       data-category=""
-      data-sticky="">
+      data-categories=""
+      data-sticky="false">
+      <a href="/2023/07/16/%E4%BA%BA%E7%94%9F%E9%87%8D%E5%90%AF%E8%AE%A1%E5%88%92/" class="block h-full focus:outline-none focus-visible:ring-2 focus-visible:ring-[#0066cc] rounded-2xl" aria-label="阅读文章：人生重启计划">
       <div>
         <span class="text-[#86868b] text-xs font-semibold uppercase tracking-widest">
           文章
@@ -1043,14 +1100,16 @@ Git birthday，笑死，现在在程序猿这条路上渐行渐远了。
         <span class="text-[#86868b] text-xs font-medium">07月16日</span>
         <span class="bg-gray-100 text-gray-600 w-8 h-8 rounded-full flex items-center justify-center font-bold text-lg">&#8599;</span>
       </div>
+      </a>
     </article>
     
-    <article class="apple-card p-10 flex flex-col justify-between reveal cursor-pointer article-item
+    <article class="apple-card p-10 flex flex-col justify-between reveal article-item
       "
       id="post-24"
-      onclick="window.location.href='/2023/07/01/%E6%AF%95%E4%B8%9A/'"
       data-category=""
-      data-sticky="">
+      data-categories=""
+      data-sticky="false">
+      <a href="/2023/07/01/%E6%AF%95%E4%B8%9A/" class="block h-full focus:outline-none focus-visible:ring-2 focus-visible:ring-[#0066cc] rounded-2xl" aria-label="阅读文章：毕业">
       <div>
         <span class="text-[#86868b] text-xs font-semibold uppercase tracking-widest">
           文章
@@ -1065,14 +1124,16 @@ Git birthday，笑死，现在在程序猿这条路上渐行渐远了。
         <span class="text-[#86868b] text-xs font-medium">07月01日</span>
         <span class="bg-gray-100 text-gray-600 w-8 h-8 rounded-full flex items-center justify-center font-bold text-lg">&#8599;</span>
       </div>
+      </a>
     </article>
     
-    <article class="apple-card p-10 flex flex-col justify-between reveal cursor-pointer article-item
+    <article class="apple-card p-10 flex flex-col justify-between reveal article-item
       "
       id="post-25"
-      onclick="window.location.href='/2023/04/06/4.26/'"
       data-category=""
-      data-sticky="">
+      data-categories=""
+      data-sticky="false">
+      <a href="/2023/04/06/4.26/" class="block h-full focus:outline-none focus-visible:ring-2 focus-visible:ring-[#0066cc] rounded-2xl" aria-label="阅读文章：四月二十六">
       <div>
         <span class="text-[#86868b] text-xs font-semibold uppercase tracking-widest">
           文章
@@ -1086,14 +1147,16 @@ Git birthday，笑死，现在在程序猿这条路上渐行渐远了。
         <span class="text-[#86868b] text-xs font-medium">04月06日</span>
         <span class="bg-gray-100 text-gray-600 w-8 h-8 rounded-full flex items-center justify-center font-bold text-lg">&#8599;</span>
       </div>
+      </a>
     </article>
     
-    <article class="apple-card p-10 flex flex-col justify-between reveal cursor-pointer article-item
+    <article class="apple-card p-10 flex flex-col justify-between reveal article-item
       "
       id="post-26"
-      onclick="window.location.href='/2023/01/03/McDonald&#39;s/'"
       data-category=""
-      data-sticky="">
+      data-categories=""
+      data-sticky="false">
+      <a href="/2023/01/03/McDonald&#39;s/" class="block h-full focus:outline-none focus-visible:ring-2 focus-visible:ring-[#0066cc] rounded-2xl" aria-label="阅读文章：M记风云">
       <div>
         <span class="text-[#86868b] text-xs font-semibold uppercase tracking-widest">
           文章
@@ -1105,14 +1168,16 @@ Git birthday，笑死，现在在程序猿这条路上渐行渐远了。
         <span class="text-[#86868b] text-xs font-medium">01月03日</span>
         <span class="bg-gray-100 text-gray-600 w-8 h-8 rounded-full flex items-center justify-center font-bold text-lg">&#8599;</span>
       </div>
+      </a>
     </article>
     
-    <article class="apple-card p-10 flex flex-col justify-between reveal cursor-pointer article-item
+    <article class="apple-card p-10 flex flex-col justify-between reveal article-item
       "
       id="post-27"
-      onclick="window.location.href='/2023/01/02/%E6%97%A5%E8%AE%B0/'"
       data-category=""
-      data-sticky="">
+      data-categories=""
+      data-sticky="false">
+      <a href="/2023/01/02/%E6%97%A5%E8%AE%B0/" class="block h-full focus:outline-none focus-visible:ring-2 focus-visible:ring-[#0066cc] rounded-2xl" aria-label="阅读文章：日记">
       <div>
         <span class="text-[#86868b] text-xs font-semibold uppercase tracking-widest">
           文章
@@ -1130,14 +1195,16 @@ Git birthday，笑死，现在在程序猿这条路上渐行渐远了。
         <span class="text-[#86868b] text-xs font-medium">01月02日</span>
         <span class="bg-gray-100 text-gray-600 w-8 h-8 rounded-full flex items-center justify-center font-bold text-lg">&#8599;</span>
       </div>
+      </a>
     </article>
     
-    <article class="apple-card p-10 flex flex-col justify-between reveal cursor-pointer article-item
+    <article class="apple-card p-10 flex flex-col justify-between reveal article-item
       "
       id="post-28"
-      onclick="window.location.href='/2022/12/26/2022%E5%B9%B4%E5%BA%A6%E6%80%BB%E7%BB%93/'"
       data-category=""
-      data-sticky="">
+      data-categories=""
+      data-sticky="false">
+      <a href="/2022/12/26/2022%E5%B9%B4%E5%BA%A6%E6%80%BB%E7%BB%93/" class="block h-full focus:outline-none focus-visible:ring-2 focus-visible:ring-[#0066cc] rounded-2xl" aria-label="阅读文章：2022年度总结">
       <div>
         <span class="text-[#86868b] text-xs font-semibold uppercase tracking-widest">
           文章
@@ -1149,14 +1216,16 @@ Git birthday，笑死，现在在程序猿这条路上渐行渐远了。
         <span class="text-[#86868b] text-xs font-medium">12月26日</span>
         <span class="bg-gray-100 text-gray-600 w-8 h-8 rounded-full flex items-center justify-center font-bold text-lg">&#8599;</span>
       </div>
+      </a>
     </article>
     
-    <article class="apple-card p-10 flex flex-col justify-between reveal cursor-pointer article-item
+    <article class="apple-card p-10 flex flex-col justify-between reveal article-item
       "
       id="post-29"
-      onclick="window.location.href='/2022/11/28/%E4%BA%8C%E8%BD%AE/'"
       data-category=""
-      data-sticky="">
+      data-categories=""
+      data-sticky="false">
+      <a href="/2022/11/28/%E4%BA%8C%E8%BD%AE/" class="block h-full focus:outline-none focus-visible:ring-2 focus-visible:ring-[#0066cc] rounded-2xl" aria-label="阅读文章：二轮复习">
       <div>
         <span class="text-[#86868b] text-xs font-semibold uppercase tracking-widest">
           文章
@@ -1168,14 +1237,16 @@ Git birthday，笑死，现在在程序猿这条路上渐行渐远了。
         <span class="text-[#86868b] text-xs font-medium">11月28日</span>
         <span class="bg-gray-100 text-gray-600 w-8 h-8 rounded-full flex items-center justify-center font-bold text-lg">&#8599;</span>
       </div>
+      </a>
     </article>
     
-    <article class="apple-card p-10 flex flex-col justify-between reveal cursor-pointer article-item
+    <article class="apple-card p-10 flex flex-col justify-between reveal article-item
       "
       id="post-30"
-      onclick="window.location.href='/2022/11/23/Git%20Birthday/'"
       data-category=""
-      data-sticky="">
+      data-categories=""
+      data-sticky="false">
+      <a href="/2022/11/23/Git%20Birthday/" class="block h-full focus:outline-none focus-visible:ring-2 focus-visible:ring-[#0066cc] rounded-2xl" aria-label="阅读文章：Git Birthday">
       <div>
         <span class="text-[#86868b] text-xs font-semibold uppercase tracking-widest">
           文章
@@ -1188,14 +1259,16 @@ Git birthday，笑死，现在在程序猿这条路上渐行渐远了。
         <span class="text-[#86868b] text-xs font-medium">11月23日</span>
         <span class="bg-gray-100 text-gray-600 w-8 h-8 rounded-full flex items-center justify-center font-bold text-lg">&#8599;</span>
       </div>
+      </a>
     </article>
     
-    <article class="apple-card p-10 flex flex-col justify-between reveal cursor-pointer article-item
+    <article class="apple-card p-10 flex flex-col justify-between reveal article-item
       "
       id="post-31"
-      onclick="window.location.href='/2022/11/18/4.26%20AM/'"
       data-category=""
-      data-sticky="">
+      data-categories=""
+      data-sticky="false">
+      <a href="/2022/11/18/4.26%20AM/" class="block h-full focus:outline-none focus-visible:ring-2 focus-visible:ring-[#0066cc] rounded-2xl" aria-label="阅读文章：4.26 AM">
       <div>
         <span class="text-[#86868b] text-xs font-semibold uppercase tracking-widest">
           文章
@@ -1208,14 +1281,16 @@ Git birthday，笑死，现在在程序猿这条路上渐行渐远了。
         <span class="text-[#86868b] text-xs font-medium">11月18日</span>
         <span class="bg-gray-100 text-gray-600 w-8 h-8 rounded-full flex items-center justify-center font-bold text-lg">&#8599;</span>
       </div>
+      </a>
     </article>
     
-    <article class="apple-card p-10 flex flex-col justify-between reveal cursor-pointer article-item
+    <article class="apple-card p-10 flex flex-col justify-between reveal article-item
       "
       id="post-32"
-      onclick="window.location.href='/2022/11/15/11/'"
       data-category=""
-      data-sticky="">
+      data-categories=""
+      data-sticky="false">
+      <a href="/2022/11/15/11/" class="block h-full focus:outline-none focus-visible:ring-2 focus-visible:ring-[#0066cc] rounded-2xl" aria-label="阅读文章：十一月十三日">
       <div>
         <span class="text-[#86868b] text-xs font-semibold uppercase tracking-widest">
           文章
@@ -1229,14 +1304,16 @@ Git birthday，笑死，现在在程序猿这条路上渐行渐远了。
         <span class="text-[#86868b] text-xs font-medium">11月15日</span>
         <span class="bg-gray-100 text-gray-600 w-8 h-8 rounded-full flex items-center justify-center font-bold text-lg">&#8599;</span>
       </div>
+      </a>
     </article>
     
-    <article class="apple-card p-10 flex flex-col justify-between reveal cursor-pointer article-item
+    <article class="apple-card p-10 flex flex-col justify-between reveal article-item
       "
       id="post-33"
-      onclick="window.location.href='/2022/03/25/%E6%9C%89%E6%84%9F%E8%80%8C%E5%8F%91/'"
       data-category=""
-      data-sticky="">
+      data-categories=""
+      data-sticky="false">
+      <a href="/2022/03/25/%E6%9C%89%E6%84%9F%E8%80%8C%E5%8F%91/" class="block h-full focus:outline-none focus-visible:ring-2 focus-visible:ring-[#0066cc] rounded-2xl" aria-label="阅读文章：随手">
       <div>
         <span class="text-[#86868b] text-xs font-semibold uppercase tracking-widest">
           文章
@@ -1250,14 +1327,16 @@ Git birthday，笑死，现在在程序猿这条路上渐行渐远了。
         <span class="text-[#86868b] text-xs font-medium">03月25日</span>
         <span class="bg-gray-100 text-gray-600 w-8 h-8 rounded-full flex items-center justify-center font-bold text-lg">&#8599;</span>
       </div>
+      </a>
     </article>
     
-    <article class="apple-card p-10 flex flex-col justify-between reveal cursor-pointer article-item
+    <article class="apple-card p-10 flex flex-col justify-between reveal article-item
       "
       id="post-34"
-      onclick="window.location.href='/2022/01/17/2021%E5%AD%A6%E6%9C%9F%E6%80%BB%E7%BB%93/'"
       data-category=""
-      data-sticky="">
+      data-categories=""
+      data-sticky="false">
+      <a href="/2022/01/17/2021%E5%AD%A6%E6%9C%9F%E6%80%BB%E7%BB%93/" class="block h-full focus:outline-none focus-visible:ring-2 focus-visible:ring-[#0066cc] rounded-2xl" aria-label="阅读文章：2021年度总结">
       <div>
         <span class="text-[#86868b] text-xs font-semibold uppercase tracking-widest">
           文章
@@ -1272,14 +1351,16 @@ Git birthday，笑死，现在在程序猿这条路上渐行渐远了。
         <span class="text-[#86868b] text-xs font-medium">01月17日</span>
         <span class="bg-gray-100 text-gray-600 w-8 h-8 rounded-full flex items-center justify-center font-bold text-lg">&#8599;</span>
       </div>
+      </a>
     </article>
     
-    <article class="apple-card p-10 flex flex-col justify-between reveal cursor-pointer article-item
+    <article class="apple-card p-10 flex flex-col justify-between reveal article-item
       "
       id="post-35"
-      onclick="window.location.href='/2021/12/09/%E7%90%86%E5%B7%A5%E8%B6%B3%E7%90%83%E9%98%9F/'"
       data-category=""
-      data-sticky="">
+      data-categories=""
+      data-sticky="false">
+      <a href="/2021/12/09/%E7%90%86%E5%B7%A5%E8%B6%B3%E7%90%83%E9%98%9F/" class="block h-full focus:outline-none focus-visible:ring-2 focus-visible:ring-[#0066cc] rounded-2xl" aria-label="阅读文章：理工足球队">
       <div>
         <span class="text-[#86868b] text-xs font-semibold uppercase tracking-widest">
           文章
@@ -1293,14 +1374,16 @@ To:广东理工职业学院跟我一起奋战过拼搏过的兄弟们
         <span class="text-[#86868b] text-xs font-medium">12月09日</span>
         <span class="bg-gray-100 text-gray-600 w-8 h-8 rounded-full flex items-center justify-center font-bold text-lg">&#8599;</span>
       </div>
+      </a>
     </article>
     
-    <article class="apple-card p-10 flex flex-col justify-between reveal cursor-pointer article-item
+    <article class="apple-card p-10 flex flex-col justify-between reveal article-item
       "
       id="post-36"
-      onclick="window.location.href='/2020/12/27/%E5%B9%B4%E5%BA%A6%E6%80%BB%E7%BB%93/'"
       data-category=""
-      data-sticky="">
+      data-categories=""
+      data-sticky="false">
+      <a href="/2020/12/27/%E5%B9%B4%E5%BA%A6%E6%80%BB%E7%BB%93/" class="block h-full focus:outline-none focus-visible:ring-2 focus-visible:ring-[#0066cc] rounded-2xl" aria-label="阅读文章：年度总结">
       <div>
         <span class="text-[#86868b] text-xs font-semibold uppercase tracking-widest">
           文章
@@ -1314,14 +1397,16 @@ To:广东理工职业学院跟我一起奋战过拼搏过的兄弟们
         <span class="text-[#86868b] text-xs font-medium">12月27日</span>
         <span class="bg-gray-100 text-gray-600 w-8 h-8 rounded-full flex items-center justify-center font-bold text-lg">&#8599;</span>
       </div>
+      </a>
     </article>
     
-    <article class="apple-card p-10 flex flex-col justify-between reveal cursor-pointer article-item
+    <article class="apple-card p-10 flex flex-col justify-between reveal article-item
       "
       id="post-37"
-      onclick="window.location.href='/2020/12/10/%E8%B5%9B%E5%8D%9A%E6%9C%8B%E5%85%8B2077/'"
       data-category=""
-      data-sticky="">
+      data-categories=""
+      data-sticky="false">
+      <a href="/2020/12/10/%E8%B5%9B%E5%8D%9A%E6%9C%8B%E5%85%8B2077/" class="block h-full focus:outline-none focus-visible:ring-2 focus-visible:ring-[#0066cc] rounded-2xl" aria-label="阅读文章：赛博朋克2077">
       <div>
         <span class="text-[#86868b] text-xs font-semibold uppercase tracking-widest">
           文章
@@ -1336,14 +1421,16 @@ To:广东理工职业学院跟我一起奋战过拼搏过的兄弟们
         <span class="text-[#86868b] text-xs font-medium">12月10日</span>
         <span class="bg-gray-100 text-gray-600 w-8 h-8 rounded-full flex items-center justify-center font-bold text-lg">&#8599;</span>
       </div>
+      </a>
     </article>
     
-    <article class="apple-card p-10 flex flex-col justify-between reveal cursor-pointer article-item
+    <article class="apple-card p-10 flex flex-col justify-between reveal article-item
       "
       id="post-38"
-      onclick="window.location.href='/2020/12/07/%E6%B0%B4/'"
       data-category=""
-      data-sticky="">
+      data-categories=""
+      data-sticky="false">
+      <a href="/2020/12/07/%E6%B0%B4/" class="block h-full focus:outline-none focus-visible:ring-2 focus-visible:ring-[#0066cc] rounded-2xl" aria-label="阅读文章：水">
       <div>
         <span class="text-[#86868b] text-xs font-semibold uppercase tracking-widest">
           文章
@@ -1357,14 +1444,16 @@ To:广东理工职业学院跟我一起奋战过拼搏过的兄弟们
         <span class="text-[#86868b] text-xs font-medium">12月07日</span>
         <span class="bg-gray-100 text-gray-600 w-8 h-8 rounded-full flex items-center justify-center font-bold text-lg">&#8599;</span>
       </div>
+      </a>
     </article>
     
-    <article class="apple-card p-10 flex flex-col justify-between reveal cursor-pointer article-item
+    <article class="apple-card p-10 flex flex-col justify-between reveal article-item
       "
       id="post-39"
-      onclick="window.location.href='/2020/11/30/%E4%B9%B1%E4%B8%83%E5%85%AB%E7%B3%9F/'"
       data-category=""
-      data-sticky="">
+      data-categories=""
+      data-sticky="false">
+      <a href="/2020/11/30/%E4%B9%B1%E4%B8%83%E5%85%AB%E7%B3%9F/" class="block h-full focus:outline-none focus-visible:ring-2 focus-visible:ring-[#0066cc] rounded-2xl" aria-label="阅读文章：圆玄之歌">
       <div>
         <span class="text-[#86868b] text-xs font-semibold uppercase tracking-widest">
           文章
@@ -1377,14 +1466,16 @@ To:广东理工职业学院跟我一起奋战过拼搏过的兄弟们
         <span class="text-[#86868b] text-xs font-medium">11月30日</span>
         <span class="bg-gray-100 text-gray-600 w-8 h-8 rounded-full flex items-center justify-center font-bold text-lg">&#8599;</span>
       </div>
+      </a>
     </article>
     
-    <article class="apple-card p-10 flex flex-col justify-between reveal cursor-pointer article-item
+    <article class="apple-card p-10 flex flex-col justify-between reveal article-item
       "
       id="post-40"
-      onclick="window.location.href='/2020/11/30/%E7%AC%AC%E4%B8%80%E7%AF%87%E5%8D%9A%E5%AE%A2/'"
       data-category=""
-      data-sticky="">
+      data-categories=""
+      data-sticky="false">
+      <a href="/2020/11/30/%E7%AC%AC%E4%B8%80%E7%AF%87%E5%8D%9A%E5%AE%A2/" class="block h-full focus:outline-none focus-visible:ring-2 focus-visible:ring-[#0066cc] rounded-2xl" aria-label="阅读文章：第一篇博客">
       <div>
         <span class="text-[#86868b] text-xs font-semibold uppercase tracking-widest">
           文章
@@ -1417,6 +1508,7 @@ aaaa a
         <span class="text-[#86868b] text-xs font-medium">11月30日</span>
         <span class="bg-gray-100 text-gray-600 w-8 h-8 rounded-full flex items-center justify-center font-bold text-lg">&#8599;</span>
       </div>
+      </a>
     </article>
     
   </div>
@@ -1470,7 +1562,7 @@ aaaa a
     var filterBtns     = document.querySelectorAll('.filter-btn');
     var currentFilter  = 'all';
     var currentPage    = 1;
-    var perPage        = 9;
+    var perPage        = 0;
     var totalItems     = articleArr.length;
 
     // ═══════════════ 随机卡片尺寸（仅执行一次） ═══════════════
@@ -1504,7 +1596,7 @@ aaaa a
       return articleArr.filter(function(el) {
         if (currentFilter === 'all')     return true;
         if (currentFilter === 'featured') return el.getAttribute('data-sticky') === 'true';
-        return el.getAttribute('data-category') === currentFilter;
+        return (el.getAttribute('data-categories') || '').split('|').indexOf(currentFilter) !== -1;
       });
     }
 
@@ -1563,11 +1655,11 @@ aaaa a
     // ═══════════════ 核心：渲染当前页 ═══════════════
     function renderPage() {
       var filtered  = getFilteredList();
-      var totalPages = Math.ceil(filtered.length / perPage) || 1;
+      var totalPages = perPage > 0 ? Math.ceil(filtered.length / perPage) || 1 : 1;
       if (currentPage > totalPages) currentPage = totalPages;
 
-      var start = (currentPage - 1) * perPage;
-      var end   = start + perPage;
+      var start = perPage > 0 ? (currentPage - 1) * perPage : 0;
+      var end   = perPage > 0 ? start + perPage : filtered.length;
       var visible = filtered.slice(start, end);
 
       articleArr.forEach(function(el) {
@@ -1576,6 +1668,7 @@ aaaa a
 
         if (shouldShow) {
           el.style.display = 'flex';
+          window.clearTimeout(el._hideTimer);
           setTimeout(function() {
             el.style.opacity = '1';
             el.style.transform = 'scale(1)';
@@ -1583,7 +1676,8 @@ aaaa a
         } else {
           el.style.opacity = '0';
           el.style.transform = 'scale(0.95)';
-          setTimeout(function() {
+          window.clearTimeout(el._hideTimer);
+          el._hideTimer = setTimeout(function() {
             el.style.display = 'none';
           }, 350);
         }
@@ -1614,7 +1708,7 @@ aaaa a
       var chartColors = ["#1d1d1f","#86868b","#d2d2d7","#f5f5f7","#a1a1a6","#e8e8ed","#636366","#48484a"];
       var bgColors = chartLabels.map(function(_, i) { return chartColors[i % chartColors.length]; });
 
-      new Chart(ctx.getContext('2d'), {
+      if (window.Chart) new Chart(ctx.getContext('2d'), {
         type: 'doughnut',
         data: {
           labels: chartLabels,
@@ -1748,7 +1842,7 @@ aaaa a
     (function() {
       var btn = document.createElement('button');
       btn.innerHTML = '&#8593;';
-      btn.setAttribute('aria-label', '返回首页');
+      btn.setAttribute('aria-label', '返回顶部');
       btn.style.cssText = 'position:fixed;bottom:32px;right:32px;z-index:50;width:44px;height:44px;border-radius:50%;background:#1d1d1f;color:#fff;font-size:20px;cursor:pointer;border:none;box-shadow:0 4px 16px rgba(0,0,0,0.12);opacity:0;transition:opacity 0.3s;pointer-events:none;';
       document.body.appendChild(btn);
       window.addEventListener('scroll', function() {
@@ -1757,6 +1851,9 @@ aaaa a
       });
       btn.addEventListener('click', function() {
         window.scrollTo({ top: 0, behavior: 'smooth' });
+      });
+      btn.addEventListener('keydown', function(event) {
+        if (event.key === 'Escape') btn.blur();
       });
     })();
   </script>
